@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+
+<script>
+  // 禁用滑鼠右鍵選單
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
+  // 禁用常見快捷鍵 (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S)
+  document.addEventListener('keydown', function(e) {
+    if (
+      e.key === 'F12' || 
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
+      (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kawaii Fishing Paradise - 日系可愛釣魚樂 Pro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #fce4ec;
+            color: #5d4037;
+            font-family: 'Hiragino Maru Gothic ProN', 'Quicksand', 'Comfortaa', '微軟正黑體', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        #game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            aspect-ratio: 720 / 480;
+            box-shadow: 0 15px 35px rgba(233, 110, 150, 0.25);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 6px solid #fff;
+            background: #fff;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #touch-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 270px;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+            z-index: 20;
+        }
+        .action-btn {
+            width: 140px;
+            height: 54px;
+            background: linear-gradient(180deg, #ff9a9e, #fecfef);
+            border: 4px solid #ffffff;
+            border-radius: 28px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(214, 80, 115, 0.5);
+            box-shadow: 0 6px 0px #f48fb1, 0 10px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: all 0.08s ease;
+            letter-spacing: 1px;
+        }
+        .action-btn:active, .action-btn.active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #f48fb1, 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .shop-toggle-btn {
+            background: linear-gradient(180deg, #a1c4fd, #c2e9fb);
+            box-shadow: 0 6px 0px #90caf9, 0 10px 20px rgba(0,0,0,0.15);
+            text-shadow: 0 2px 4px rgba(60, 120, 180, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-wrapper">
+    <canvas id="gameCanvas" width="720" height="480"></canvas>
+    <div id="touch-controls">
+        <div id="btn-action" class="action-btn">決定!</div>
+        <div id="btn-shop" class="action-btn shop-toggle-btn">圖鑑 »</div>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const actionBtn = document.getElementById('btn-action');
+const shopBtn = document.getElementById('btn-shop');
+
+// --- 日系Q版角色定義 ---
+const CHARACTERS = [
+    {
+        id: "sakura",
+        name: "Daddy Pig",
+        desc: "二四七的釣魚客",
+        hatColor: "#ff85a2",
+        hatBrim: "#ffb3c1",
+        skinColor: "#fff0f5",
+        shirtColor: "#ff758f",
+        pantsColor: "#70d6ff",
+        hairColor: "#ff4d6d",
+        blush: "#ff70a6"
+    },
+    {
+        id: "matcha",
+        name: "Pascal",
+        desc: "騙財課金的客服",
+        hatColor: "#a3e635",
+        hatBrim: "#bef264",
+        skinColor: "#fff5eb",
+        shirtColor: "#65a30d",
+        pantsColor: "#475569",
+        hairColor: "#3f6212",
+        blush: "#f87171"
+    },
+    {
+        id: "taiyo",
+        name: "Florian",
+        desc: "沉著冷靜的問題大叔",
+        hatColor: "#fbbf24",
+        hatBrim: "#fef08a",
+        skinColor: "#fde047",
+        shirtColor: "#f97316",
+        pantsColor: "#0284c7",
+        hairColor: "#d97706",
+        blush: "#fb923c"
+    }
+];
+let selectedCharIndex = 0;
+
+// --- 魚類等級品質定義 (除最後一款外適用) ---
+const FISH_QUALITIES = [
+    { name: "一般", badge: "", diffMult: 1.0, scoreMult: 1.0, weight: 50 },
+    { name: "優良", badge: "★", diffMult: 1.25, scoreMult: 1.5, weight: 25 },
+    { name: "稀有", badge: "★★", diffMult: 1.5, scoreMult: 2.0, weight: 15 },
+    { name: "史詩", badge: "★★★", diffMult: 1.75, scoreMult: 3.0, weight: 8 },
+    { name: "傳說", badge: "👑", diffMult: 2.0, scoreMult: 5.0, weight: 2 }
+];
+
+// --- 遊戲狀態 ---
+let gameState = "SELECT_CHAR"; 
+let currentTab = "LOG"; 
+let lineTension = 0.0;
+let fishDistance = 50.0;
+let biteTimer = 0;
+let fightStartTime = 0;
+let currentFish = null;
+let currentFishQuality = null;
+let resultMsg = "";
+let scoreGainedMsg = "";
+let isPressing = false;
+let shopNotice = ""; 
+let noticeTimer = 0;
+
+// 魚線機制
+let remainingLines = 10;
+
+// 蓄力甩竿相關
+let castPower = 0.0;
+let powerDirection = 1;
+
+let totalScore = 0;
+let totalCatches = 0;
+
+// 特效粒子 (櫻花花瓣)
+const sakuraPetals = Array.from({ length: 40 }, () => ({
+    x: Math.random() * 540,
+    y: Math.random() * 480,
+    speedY: 1 + Math.random() * 1.5,
+    speedX: 0.5 + Math.random() * 1,
+    size: 4 + Math.random() * 4,
+    rot: Math.random() * 360
+}));
+
+// --- PARKSIDE 釣魚竿商店 ---
+const RODS = [
+    { id: "bamboo", name: "初新手作竿", price: 0, reelSpeed: 0.8, tensionMult: 0.8, color: "#e9c46a", owned: true },
+    { id: "strawberry", name: "草莓甜心竿", price: 600, reelSpeed: 1.0, tensionMult: 0.65, color: "#ff85a2", owned: false },
+    { id: "catpaw", name: "貓咪肉墊竿", price: 2000, reelSpeed: 1.3, tensionMult: 0.45, color: "#b8c0ff", owned: false },
+    { id: "sakura_god", name: "六合彩神竿", price: 9999, reelSpeed: 1.7, tensionMult: 0.25, color: "#ffd166", owned: false }
+];
+let equippedRodIndex = 0;
+
+// --- 日系Q版可愛魚種定義 ---
+const FISH_SPECIES = [
+    { id: "goldfish", name: "櫻花小金魚", color: "#ff758f", belly: "#fff0f5", difficulty: 0.6, size: 28, score: 10, count: 0, weight: 45, icon: "🐟", isSpecial: false },
+    { id: "dango", name: "三色團子魚", color: "#a8e6cf", belly: "#ffd3b6", difficulty: 0.95, size: 34, score: 50, count: 0, weight: 30, icon: "🍡", isSpecial: false },
+    { id: "takoyaki", name: "章魚燒小章魚", color: "#ff8b94", belly: "#ffaaa5", difficulty: 1.4, size: 38, score: 100, count: 0, weight: 18, icon: "🐙", isSpecial: false },
+    { id: "shiba", name: "柴犬水母", color: "#f0a868", belly: "#fff2df", difficulty: 1.9, size: 44, score: 200, count: 0, weight: 6, icon: "🐕", isSpecial: false },
+    { id: "koi_god", name: "錦鯉大檸樂", color: "#ff4757", belly: "#ffd700", difficulty: 2.8, size: 52, score: 1000, count: 0, weight: 1, isSpecial: true, icon: "✨" }
+];
+
+// 音效
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type, startFreq, endFreq, duration, vol=0.1) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
+        if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+}
+
+function getRandomFish() {
+    const totalWeight = FISH_SPECIES.reduce((sum, f) => sum + f.weight, 0);
+    let rand = Math.random() * totalWeight;
+    for (let fish of FISH_SPECIES) {
+        if (rand < fish.weight) return fish;
+        rand -= fish.weight;
+    }
+    return FISH_SPECIES[0];
+}
+
+function getRandomQuality() {
+    const totalWeight = FISH_QUALITIES.reduce((sum, q) => sum + q.weight, 0);
+    let rand = Math.random() * totalWeight;
+    for (let q of FISH_QUALITIES) {
+        if (rand < q.weight) return q;
+        rand -= q.weight;
+    }
+    return FISH_QUALITIES[0];
+}
+
+function resetGame() {
+    remainingLines = 10;
+    gameState = "IDLE";
+    actionBtn.innerText = "拋竿 (CAST)";
+}
+
+// 操作處理
+function handlePressStart(e) {
+    if (e) e.preventDefault();
+    isPressing = true;
+    actionBtn.classList.add('active');
+
+    if (gameState === "SELECT_CHAR") {
+        playSound("sine", 600, 1000, 0.15, 0.2);
+        resetGame();
+        shopBtn.innerText = "圖鑑 »";
+    } else if (gameState === "GAME_OVER") {
+        playSound("sine", 600, 1000, 0.15, 0.2);
+        resetGame();
+    } else if (gameState === "IDLE") {
+        if (remainingLines <= 0) {
+            playSound("square", 200, 100, 0.2, 0.2);
+            shopNotice = "魚線用完了！請到 Lidl 商店購買！";
+            noticeTimer = Date.now() + 2000;
+            return;
+        }
+        gameState = "CHARGING";
+        castPower = 0.0;
+        powerDirection = 1;
+        actionBtn.innerText = "蓄力中...";
+        playSound("sine", 400, 700, 0.1, 0.1);
+    } else if (gameState === "RESULT") {
+        if (remainingLines <= 0) {
+            gameState = "GAME_OVER";
+            actionBtn.innerText = "重新開始";
+        } else {
+            gameState = "IDLE";
+            actionBtn.innerText = "拋竿 (CAST)";
+        }
+    }
+}
+
+function handlePressEnd(e) {
+    if (e) e.preventDefault();
+    isPressing = false;
+    actionBtn.classList.remove('active');
+
+    if (gameState === "CHARGING") {
+        remainingLines--; // 消耗 1 條魚線
+        fishDistance = 25.0 + (castPower / 100.0) * 70.0;
+        playSound("sine", 400, 900, 0.2, 0.2);
+        gameState = "WAITING";
+        biteTimer = Date.now() + (1800 + Math.random() * 2000);
+        actionBtn.innerText = "等待中...";
+    }
+}
+
+window.addEventListener('keydown', (e) => { 
+    if (e.code === 'Space' && !e.repeat) handlePressStart(); 
+    if (gameState === "SELECT_CHAR") {
+        if (e.code === 'ArrowRight') { selectedCharIndex = (selectedCharIndex + 1) % CHARACTERS.length; playSound("sine", 600, 700, 0.08, 0.15); }
+        if (e.code === 'ArrowLeft') { selectedCharIndex = (selectedCharIndex - 1 + CHARACTERS.length) % CHARACTERS.length; playSound("sine", 600, 700, 0.08, 0.15); }
+    }
+});
+window.addEventListener('keyup', (e) => { if (e.code === 'Space') handlePressEnd(); });
+
+actionBtn.addEventListener('touchstart', handlePressStart, {passive: false});
+actionBtn.addEventListener('touchend', handlePressEnd, {passive: false});
+actionBtn.addEventListener('mousedown', handlePressStart);
+actionBtn.addEventListener('mouseup', handlePressEnd);
+
+shopBtn.addEventListener('click', () => {
+    if (gameState === "SELECT_CHAR") {
+        selectedCharIndex = (selectedCharIndex + 1) % CHARACTERS.length;
+        playSound("sine", 600, 800, 0.1, 0.2);
+    } else {
+        currentTab = (currentTab === "LOG") ? "SHOP" : "LOG";
+        shopBtn.innerText = currentTab === "LOG" ? "商店 »" : "圖鑑 »";
+        playSound("sine", 700, 950, 0.1, 0.2);
+    }
+});
+
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const clickX = (e.clientX - rect.left) * scaleX;
+    const clickY = (e.clientY - rect.top) * scaleY;
+
+    if (gameState === "SELECT_CHAR") {
+        CHARACTERS.forEach((c, idx) => {
+            const cardX = 50 + idx * 210;
+            const cardY = 120;
+            if (clickX >= cardX && clickX <= cardX + 190 && clickY >= cardY && clickY <= cardY + 250) {
+                selectedCharIndex = idx;
+                playSound("sine", 800, 1000, 0.1, 0.2);
+            }
+        });
+        return;
+    }
+
+    if (currentTab === "SHOP") {
+        const px = 530;
+
+        // 1. 釣竿購買
+        RODS.forEach((rod, index) => {
+            const yOff = 110 + index * 65;
+            const btnX = px + 25, btnY = yOff + 22, btnW = 135, btnH = 24;
+
+            if (clickX >= btnX && clickX <= btnX + btnW && clickY >= btnY && clickY <= btnY + btnH) {
+                if (!rod.owned) {
+                    if (totalScore >= rod.price) {
+                        totalScore -= rod.price;
+                        rod.owned = true;
+                        equippedRodIndex = index;
+                        playSound("sine", 500, 1200, 0.3, 0.3);
+                        shopNotice = "已購買並裝備！";
+                        noticeTimer = Date.now() + 1500;
+                    } else {
+                        playSound("square", 200, 100, 0.2, 0.2);
+                        shopNotice = "點數不足捏！";
+                        noticeTimer = Date.now() + 1500;
+                    }
+                } else {
+                    equippedRodIndex = index;
+                    playSound("sine", 800, 1000, 0.1, 0.2);
+                    shopNotice = "已成功裝備！";
+                    noticeTimer = Date.now() + 1500;
+                }
+            }
+        });
+
+        // 2. 魚線購買區域 (單條 100PT / 5條 400PT)
+        const lineShopY = 370;
+        // 單條魚線
+        if (clickX >= px + 15 && clickX <= px + 90 && clickY >= lineShopY + 25 && clickY <= lineShopY + 50) {
+            if (totalScore >= 100) {
+                totalScore -= 100;
+                remainingLines += 1;
+                playSound("sine", 600, 1100, 0.2, 0.25);
+                shopNotice = "已購買 1 條魚線！";
+                noticeTimer = Date.now() + 1500;
+            } else {
+                playSound("square", 200, 100, 0.2, 0.2);
+                shopNotice = "點數不足！";
+                noticeTimer = Date.now() + 1500;
+            }
+        }
+        // 5 條魚線
+        if (clickX >= px + 100 && clickX <= px + 175 && clickY >= lineShopY + 25 && clickY <= lineShopY + 50) {
+            if (totalScore >= 400) {
+                totalScore -= 400;
+                remainingLines += 5;
+                playSound("sine", 600, 1200, 0.3, 0.3);
+                shopNotice = "已購買 5 條魚線！";
+                noticeTimer = Date.now() + 1500;
+            } else {
+                playSound("square", 200, 100, 0.2, 0.2);
+                shopNotice = "點數不足！";
+                noticeTimer = Date.now() + 1500;
+            }
+        }
+    }
+});
+
+// 日系馬卡龍色調天空與大海
+function drawKawaiiBackground(now) {
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, 210);
+    skyGrad.addColorStop(0, "#ffdde1");
+    skyGrad.addColorStop(1, "#ee9ca7");
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, 530, 210);
+
+    // 太陽 / 雲朵
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(440, 55, 28, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#fffae6"; ctx.beginPath(); ctx.arc(440, 55, 22, 0, Math.PI * 2); ctx.fill();
+
+    // Q版棉花雲
+    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+    ctx.beginPath();
+    ctx.arc(100, 70, 18, 0, Math.PI * 2);
+    ctx.arc(120, 60, 24, 0, Math.PI * 2);
+    ctx.arc(145, 70, 18, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 遠處可愛波浪山丘
+    ctx.fillStyle = "#b5e2fa";
+    ctx.beginPath();
+    ctx.moveTo(0, 210);
+    ctx.quadraticCurveTo(130, 160, 260, 210);
+    ctx.quadraticCurveTo(390, 170, 530, 210);
+    ctx.fill();
+
+    // 馬卡龍色系水面
+    const seaGrad = ctx.createLinearGradient(0, 210, 0, 480);
+    seaGrad.addColorStop(0, "#70d6ff");
+    seaGrad.addColorStop(1, "#ff70a6");
+    ctx.fillStyle = seaGrad;
+    ctx.fillRect(0, 210, 530, 270);
+
+    // 可愛草地木頭碼頭
+    ctx.fillStyle = "#a8e6cf";
+    ctx.beginPath(); ctx.roundRect(0, 180, 140, 45, [0, 15, 15, 0]); ctx.fill();
+    ctx.fillStyle = "#ffaaa5"; ctx.fillRect(0, 195, 120, 12);
+
+    // 櫻花飄落粒子
+    ctx.fillStyle = "#ffb3c1";
+    sakuraPetals.forEach(p => {
+        p.y += p.speedY; p.x += Math.sin(now * 0.002) * p.speedX;
+        if (p.y > 480) { p.y = -10; p.x = Math.random() * 530; }
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y, p.size, p.size / 2, p.rot, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
+// 繪製日系 Q 版角色
+function drawKawaiiFisherman(x, y, charData) {
+    const c = charData || CHARACTERS[selectedCharIndex];
+    let bounceY = (gameState === "RESULT" && resultMsg.includes("成功")) ? Math.abs(Math.sin(Date.now() * 0.015)) * -14 : 0;
+    const curY = y + bounceY;
+
+    ctx.fillStyle = c.shirtColor; ctx.beginPath(); ctx.roundRect(x + 2, curY + 22, 22, 20, 8); ctx.fill();
+    ctx.fillStyle = c.pantsColor; ctx.fillRect(x + 5, curY + 40, 6, 10); ctx.fillRect(x + 15, curY + 40, 6, 10);
+    ctx.fillStyle = c.skinColor; ctx.beginPath(); ctx.arc(x + 13, curY + 12, 18, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = c.blush;
+    ctx.beginPath(); ctx.arc(x + 4, curY + 16, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 22, curY + 16, 4, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = "#2b2d42";
+    ctx.beginPath(); ctx.arc(x + 7, curY + 12, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 19, curY + 12, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.arc(x + 6, curY + 11, 1, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 18, curY + 11, 1, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = c.hatColor; ctx.beginPath(); ctx.arc(x + 13, curY + 2, 18, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = c.hatBrim; ctx.beginPath(); ctx.roundRect(x - 8, curY, 42, 6, 3); ctx.fill();
+
+    const currentRod = RODS[equippedRodIndex];
+    ctx.strokeStyle = currentRod.color;
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+
+    if (gameState === "CHARGING") {
+        ctx.beginPath(); ctx.moveTo(x + 5, curY + 25); ctx.lineTo(x - 30, curY - 10); ctx.stroke();
+    } else {
+        ctx.beginPath(); ctx.moveTo(x + 18, curY + 25); ctx.lineTo(x + 65, curY - 20); ctx.stroke();
+    }
+}
+
+// 繪製 Q 版卡通魚
+function drawKawaiiFish(x, y, fish, scale=1.0) {
+    const s = fish.size * scale;
+    ctx.fillStyle = fish.color;
+    ctx.beginPath(); ctx.ellipse(x, y, s/1.8, s/2.4, 0, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = fish.belly;
+    ctx.beginPath(); ctx.ellipse(x, y + s/6, s/2.2, s/5, 0, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(x - s/3, y - s/8, Math.max(3, 5 * scale), 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#222"; ctx.beginPath(); ctx.arc(x - s/3 - 1, y - s/8, Math.max(1.5, 2.5 * scale), 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = "#ff758f"; ctx.beginPath(); ctx.arc(x - s/4, y + s/10, Math.max(2, 3 * scale), 0, Math.PI * 2); ctx.fill();
+
+    const tailAngle = Math.sin(Date.now() * 0.015) * 8 * scale;
+    ctx.fillStyle = fish.color;
+    ctx.beginPath();
+    ctx.moveTo(x + s/2, y);
+    ctx.lineTo(x + s/2 + 12 * scale, y - 8 * scale + tailAngle);
+    ctx.lineTo(x + s/2 + 12 * scale, y + 8 * scale + tailAngle);
+    ctx.fill();
+}
+
+// 角色選擇畫面
+function drawCharacterSelectScreen() {
+    ctx.fillStyle = "#fff5f6";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ff4d6d";
+    ctx.font = "bold 26px 'Quicksand', sans-serif";
+    ctx.fillText("✨ 選擇你的釣魚夥伴 ✨", canvas.width / 2, 55);
+
+    CHARACTERS.forEach((char, idx) => {
+        const cardX = 50 + idx * 210, cardY = 110, cardW = 190, cardH = 250;
+        const isSelected = (idx === selectedCharIndex);
+
+        ctx.fillStyle = isSelected ? "#ffffff" : "#fff0f3";
+        ctx.beginPath(); ctx.roundRect(cardX, cardY, cardW, cardH, 20); ctx.fill();
+
+        ctx.strokeStyle = isSelected ? "#ff758f" : "#ffccd5";
+        ctx.lineWidth = isSelected ? 4 : 2;
+        ctx.stroke();
+
+        ctx.fillStyle = isSelected ? "#ffe5ec" : "#f8edeb";
+        ctx.beginPath(); ctx.arc(cardX + cardW/2, cardY + 80, 45, 0, Math.PI * 2); ctx.fill();
+
+        drawKawaiiFisherman(cardX + cardW / 2 - 13, cardY + 45, char);
+
+        ctx.fillStyle = isSelected ? "#ff4d6d" : "#590d22";
+        ctx.font = "bold 16px '微軟正黑體', sans-serif";
+        ctx.fillText(char.name, cardX + cardW / 2, cardY + 160);
+
+        ctx.fillStyle = "#8d99ae";
+        ctx.font = "bold 12px '微軟正黑體', sans-serif";
+        ctx.fillText(char.desc, cardX + cardW / 2, cardY + 190);
+
+        if (isSelected) {
+            ctx.fillStyle = "#ff758f";
+            ctx.font = "bold 14px sans-serif";
+            ctx.fillText("★ 已選擇 ★", cardX + cardW / 2, cardY + 225);
+        }
+    });
+
+    ctx.fillStyle = "#c9184a";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("按「決定!」按鈕或點擊卡片開始遊戲", canvas.width / 2, 415);
+    ctx.textAlign = "left";
+}
+
+// 側邊欄 (圖鑑與商店)
+function drawSidebar() {
+    const px = 530, py = 0, pw = 190, ph = 480;
+    ctx.fillStyle = "#fff0f3"; ctx.fillRect(px, py, pw, ph);
+    ctx.strokeStyle = "#ffccd5"; ctx.lineWidth = 3; ctx.strokeRect(px, py, pw, ph);
+
+    ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 14px sans-serif";
+    ctx.fillText("🎀 冒險統計", px + 45, py + 25);
+    ctx.fillStyle = "#590d22"; ctx.font = "bold 12px sans-serif";
+    ctx.fillText(`總獲得點數: ${totalScore} pt`, px + 15, py + 46);
+    ctx.fillText(`成功釣起數: ${totalCatches} 尾`, px + 15, py + 64);
+    
+    // 魚線顯示
+    ctx.fillStyle = remainingLines <= 2 ? "#e63946" : "#0077b6";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText(`🧶 剩餘魚線: ${remainingLines} 條`, px + 15, py + 84);
+
+    ctx.strokeStyle = "#ffb3c1"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px + 15, py + 94); ctx.lineTo(px + 175, py + 94); ctx.stroke();
+
+    if (currentTab === "LOG") {
+        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 14px sans-serif";
+        ctx.fillText("📖 魚類圖鑑", px + 45, py + 112);
+
+        FISH_SPECIES.forEach((fish, i) => {
+            const yOff = py + 120 + i * 68;
+            drawKawaiiFish(px + 30, yOff + 20, fish, 0.5);
+            ctx.fillStyle = fish.isSpecial ? "#ff0054" : "#590d22";
+            ctx.font = "bold 11px sans-serif";
+            ctx.fillText(`${fish.icon} ${fish.name}`, px + 52, yOff + 16);
+            ctx.fillStyle = fish.count > 0 ? "#2a9d8f" : "#8d99ae";
+            ctx.fillText(`已捕捉: ${fish.count} (+${fish.score}pt)`, px + 52, yOff + 32);
+        });
+    } else {
+        ctx.fillStyle = "#0077b6"; ctx.font = "bold 14px sans-serif";
+        ctx.fillText("🛒 釣竿與魚線", px + 28, py + 112);
+
+        // 釣竿列表
+        RODS.forEach((rod, index) => {
+            const yOff = py + 120 + index * 62;
+            ctx.fillStyle = rod.color;
+            ctx.beginPath(); ctx.roundRect(px + 12, yOff + 5, 6, 40, 3); ctx.fill();
+
+            ctx.fillStyle = "#03045e"; ctx.font = "bold 11px sans-serif";
+            ctx.fillText(rod.name, px + 24, yOff + 16);
+
+            const btnX = px + 24, btnY = yOff + 22, btnW = 140, btnH = 22;
+            const isEquipped = equippedRodIndex === index;
+
+            if (isEquipped) {
+                ctx.fillStyle = "#06d6a0"; ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 11); ctx.fill();
+                ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
+                ctx.fillText("使用中 ★", btnX + 42, btnY + 15);
+            } else if (rod.owned) {
+                ctx.fillStyle = "#118ab2"; ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 11); ctx.fill();
+                ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
+                ctx.fillText("裝備釣竿", btnX + 45, btnY + 15);
+            } else {
+                ctx.fillStyle = totalScore >= rod.price ? "#ffd166" : "#cbd5e1";
+                ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 11); ctx.fill();
+                ctx.fillStyle = "#590d22"; ctx.font = "bold 10px sans-serif";
+                ctx.fillText(`購買 (${rod.price}pt)`, btnX + 25, btnY + 15);
+            }
+        });
+
+        // 魚線購買區
+        const lineShopY = 370;
+        ctx.strokeStyle = "#ffb3c1"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(px + 15, lineShopY); ctx.lineTo(px + 175, lineShopY); ctx.stroke();
+
+        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 12px sans-serif";
+        ctx.fillText("🧶 補充魚線 由PARKSIDE提供", px + 55, lineShopY + 16);
+
+        // 1 條按鈕
+        ctx.fillStyle = totalScore >= 100 ? "#ff85a2" : "#cbd5e1";
+        ctx.beginPath(); ctx.roundRect(px + 15, lineShopY + 25, 75, 25, 12); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
+        ctx.fillText("+1條(100pt)", px + 20, lineShopY + 41);
+
+        // 5 條按鈕
+        ctx.fillStyle = totalScore >= 400 ? "#ff4757" : "#cbd5e1";
+        ctx.beginPath(); ctx.roundRect(px + 100, lineShopY + 25, 75, 25, 12); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
+        ctx.fillText("+5條(400pt)", px + 105, lineShopY + 41);
+
+        if (Date.now() < noticeTimer) {
+            ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 11px sans-serif";
+            ctx.fillText(shopNotice, px + 15, py + 455);
+        }
+    }
+}
+
+function update() {
+    if (gameState === "SELECT_CHAR" || gameState === "GAME_OVER") return;
+
+    if (gameState === "CHARGING") {
+        castPower += powerDirection * 2.8;
+        if (castPower >= 100) { castPower = 100; powerDirection = -1; }
+        else if (castPower <= 0) { castPower = 0; powerDirection = 1; }
+    } else if (gameState === "WAITING" && Date.now() >= biteTimer) {
+        playSound("sine", 700, 1100, 0.2, 0.3);
+        currentFish = getRandomFish();
+
+        // 如果不是最後一款特殊魚 (錦鯉大明神)，隨機生成品質等級
+        if (!currentFish.isSpecial) {
+            currentFishQuality = getRandomQuality();
+        } else {
+            currentFishQuality = { name: "神聖", badge: "✨", diffMult: 1.0, scoreMult: 1.0 };
+        }
+
+        lineTension = 10.0;
+        fightStartTime = Date.now();
+        gameState = "FIGHTING";
+        actionBtn.innerText = "按住收線!!";
+    } else if (gameState === "FIGHTING") {
+        const equippedRod = RODS[equippedRodIndex];
+        const qualityDiff = currentFishQuality ? currentFishQuality.diffMult : 1.0;
+
+        if (isPressing) {
+            fishDistance -= equippedRod.reelSpeed;
+            lineTension += (0.75 * equippedRod.tensionMult * qualityDiff);
+            if (Math.random() < 0.2) playSound("sine", 300, 400, 0.05, 0.1);
+        } else {
+            lineTension -= 0.85;
+            fishDistance += (currentFish.difficulty * qualityDiff) * 0.25;
+        }
+
+        lineTension = Math.max(0, Math.min(100, lineTension));
+        fishDistance = Math.max(0, Math.min(100, fishDistance));
+
+        if (Date.now() - fightStartTime > 500) {
+            if (lineTension >= 100 || fishDistance >= 100) {
+                playSound("square", 180, 80, 0.3, 0.3);
+                resultMsg = lineTension >= 100 ? "魚線斷掉啦！" : "魚兒溜走了～";
+                scoreGainedMsg = "-50 PT (魚線耗損 -1)";
+                totalScore = Math.max(0, totalScore - 50);
+                gameState = "RESULT";
+                actionBtn.innerText = remainingLines <= 0 ? "檢視結算" : "再試一次";
+            } else if (fishDistance <= 0) {
+                playSound("sine", 600, 1200, 0.35, 0.3);
+                currentFish.count++;
+                
+                // 成功釣到保留魚線
+                remainingLines++; 
+
+                const gainedScore = Math.floor(currentFish.score * currentFishQuality.scoreMult);
+                totalScore += gainedScore;
+                totalCatches++;
+
+                const qualityPrefix = currentFishQuality.badge ? `[${currentFishQuality.name} ${currentFishQuality.badge}] ` : "";
+                resultMsg = `成功釣到 ${qualityPrefix}${currentFish.name}！`;
+                scoreGainedMsg = `+${gainedScore} PT GET! (魚線保留)`;
+                gameState = "RESULT";
+                actionBtn.innerText = "再試一次";
+            }
+        }
+    }
+}
+
+function render() {
+    if (gameState === "SELECT_CHAR") {
+        drawCharacterSelectScreen();
+        return;
+    }
+
+    const now = Date.now();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawKawaiiBackground(now);
+    drawKawaiiFisherman(50, 155, CHARACTERS[selectedCharIndex]);
+
+    // 浮標與釣線
+    if (gameState === "WAITING" || gameState === "FIGHTING") {
+        const rodTipX = 115;
+        const rodTipY = 135;
+        const bobberX = 170 + (fishDistance * 3.1);
+        const bobberY = 215 + Math.sin(now * 0.006) * 4;
+
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(rodTipX, rodTipY); ctx.lineTo(bobberX, bobberY); ctx.stroke();
+
+        ctx.fillStyle = "#ff758f";
+        ctx.beginPath(); ctx.arc(bobberX, bobberY, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.beginPath(); ctx.arc(bobberX - 2, bobberY - 2, 2, 0, Math.PI * 2); ctx.fill();
+
+        if (gameState === "FIGHTING" && currentFish) {
+            drawKawaiiFish(bobberX, bobberY + 30, currentFish);
+        }
+    }
+
+    const centerX = 265;
+    ctx.textAlign = "center";
+    
+    if (gameState === "IDLE") {
+        ctx.fillStyle = "#590d22"; ctx.font = "bold 16px '微軟正黑體', sans-serif";
+        ctx.fillText("按住按鈕進行蓄力甩竿吧！", centerX, 35);
+        ctx.fillStyle = "#0077b6"; ctx.font = "bold 13px sans-serif";
+        ctx.fillText(`🧶 剩餘魚線: ${remainingLines} 條 (每次甩竿耗損 1 條)`, centerX, 60);
+    } else if (gameState === "CHARGING") {
+        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 16px sans-serif";
+        ctx.fillText("鬆開按鈕拋出浮標！", centerX, 28);
+
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(125, 38, 280, 22, 11); ctx.fill();
+        ctx.strokeStyle = "#ff758f"; ctx.lineWidth = 3; ctx.stroke();
+
+        const pColor = castPower > 80 ? "#ff4757" : (castPower > 45 ? "#ffd166" : "#06d6a0");
+        ctx.fillStyle = pColor;
+        ctx.beginPath(); ctx.roundRect(128, 41, (castPower / 100.0) * 274, 16, 8); ctx.fill();
+    } else if (gameState === "WAITING") {
+        ctx.fillStyle = "#590d22"; ctx.font = "bold 16px sans-serif";
+        ctx.fillText(`甩竿距離：${Math.floor(fishDistance)} 米`, centerX, 40);
+        ctx.fillStyle = "#ff758f"; ctx.font = "bold 14px sans-serif";
+        ctx.fillText("靜心等待魚兒上鉤...", centerX, 65);
+    } else if (gameState === "FIGHTING") {
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(125, 25, 280, 18, 9); ctx.fill();
+        ctx.fillStyle = lineTension > 75 ? "#ff4d6d" : "#06d6a0";
+        ctx.beginPath(); ctx.roundRect(127, 27, lineTension * 2.76, 14, 7); ctx.fill();
+
+        ctx.fillStyle = "#590d22"; ctx.font = "bold 12px sans-serif";
+        ctx.fillText(`魚線張力: ${Math.floor(lineTension)}%`, centerX, 20);
+
+        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 14px sans-serif";
+        const qText = currentFishQuality.badge ? `【品質：${currentFishQuality.name} ${currentFishQuality.badge}】` : "";
+        ctx.fillText(`${qText} 連按或按住按鈕快速收線！`, centerX, 70);
+    } else if (gameState === "RESULT") {
+        ctx.fillStyle = resultMsg.includes("成功") ? "#ff4d6d" : "#e63946";
+        ctx.font = "bold 18px '微軟正黑體', sans-serif";
+        ctx.fillText(resultMsg, centerX, 40);
+
+        ctx.fillStyle = resultMsg.includes("成功") ? "#2a9d8f" : "#e63946";
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText(scoreGainedMsg, centerX, 65);
+
+        if (currentFish && resultMsg.includes("成功")) {
+            drawKawaiiFish(centerX, 130, currentFish, 1.4);
+        }
+    } else if (gameState === "GAME_OVER") {
+        ctx.fillStyle = "#d62828";
+        ctx.font = "bold 24px '微軟正黑體', sans-serif";
+        ctx.fillText("😭 魚線用盡 GAME OVER 😭", centerX, 110);
+        ctx.fillStyle = "#590d22";
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText(`本次獲得總點數: ${totalScore} PT`, centerX, 150);
+        ctx.fillText(`成功釣起魚類: ${totalCatches} 尾`, centerX, 180);
+        ctx.fillStyle = "#0077b6";
+        ctx.fillText("點擊按鈕重置 10 條魚線重新開始！", centerX, 220);
+    }
+    ctx.textAlign = "left";
+
+    drawSidebar();
+}
+
+function gameLoop() {
+    update();
+    render();
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+</body>
+</html>

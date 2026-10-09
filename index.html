@@ -2,6 +2,14 @@
 <html lang="zh-TW">
 <head>
 
+<meta name="robots" content="noindex, nofollow, noai, noimageai">
+<meta name="googlebot" content="noindex, nofollow, noai">
+<meta name="GPTBot" content="noindex, nofollow">
+<meta name="ChatGPT-User" content="noindex, nofollow">
+<meta name="ClaudeBot" content="noindex, nofollow">
+<meta name="PerplexityBot" content="noindex, nofollow">
+
+
 <script>
   // 禁用滑鼠右鍵選單
   document.addEventListener('contextmenu', function(e) {
@@ -23,7 +31,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Kawaii Fishing Paradise - 日系可愛釣魚樂 Pro</title>
+    <title>Kawaii Fishing Paradise - Mobile Responsive Pro</title>
     <style>
         * {
             box-sizing: border-box;
@@ -39,46 +47,60 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
-            overflow: hidden;
+            padding: 15px;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
+
+        /* 遊戲主容器 */
         #game-wrapper {
             position: relative;
             width: 100%;
             max-width: 720px;
-            aspect-ratio: 720 / 480;
-            box-shadow: 0 15px 35px rgba(233, 110, 150, 0.25);
-            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(233, 110, 150, 0.25);
+            border-radius: 20px;
             overflow: hidden;
-            border: 6px solid #fff;
+            border: 5px solid #fff;
             background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        /* Canvas 畫布適應 */
         canvas {
             width: 100%;
-            height: 100%;
+            height: auto;
+            aspect-ratio: 720 / 480;
             display: block;
         }
+
+        /* 獨立控制按鈕區（位於遊戲畫布下方，不再遮擋遊戲畫面） */
         #touch-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 270px;
-            transform: translateX(-50%);
+            width: 100%;
+            background: #fff5f6;
+            padding: 12px 20px;
             display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 16px;
-            z-index: 20;
+            border-top: 2px dashed #ffccd5;
         }
+
         .action-btn {
-            width: 140px;
-            height: 54px;
+            flex: 1;
+            max-width: 180px;
+            height: 52px;
             background: linear-gradient(180deg, #ff9a9e, #fecfef);
-            border: 4px solid #ffffff;
-            border-radius: 28px;
+            border: 3px solid #ffffff;
+            border-radius: 26px;
             color: #ffffff;
             font-size: 16px;
             font-weight: 800;
             text-shadow: 0 2px 4px rgba(214, 80, 115, 0.5);
-            box-shadow: 0 6px 0px #f48fb1, 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 0px #f48fb1, 0 8px 15px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -88,13 +110,28 @@
             letter-spacing: 1px;
         }
         .action-btn:active, .action-btn.active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0px #f48fb1, 0 4px 10px rgba(0,0,0,0.15);
+            transform: translateY(3px);
+            box-shadow: 0 2px 0px #f48fb1, 0 4px 8px rgba(0,0,0,0.1);
         }
         .shop-toggle-btn {
             background: linear-gradient(180deg, #a1c4fd, #c2e9fb);
-            box-shadow: 0 6px 0px #90caf9, 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 0px #90caf9, 0 8px 15px rgba(0,0,0,0.1);
             text-shadow: 0 2px 4px rgba(60, 120, 180, 0.5);
+        }
+
+        /* 針對手機直屏的優化媒體查詢 */
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+            #game-wrapper {
+                border-radius: 12px;
+                border-width: 3px;
+            }
+            .action-btn {
+                height: 48px;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -102,6 +139,7 @@
 
 <div id="game-wrapper">
     <canvas id="gameCanvas" width="720" height="480"></canvas>
+    <!-- 控制按鈕移至 Canvas 畫布外部，徹底解決遮擋內容問題 -->
     <div id="touch-controls">
         <div id="btn-action" class="action-btn">決定!</div>
         <div id="btn-shop" class="action-btn shop-toggle-btn">圖鑑 »</div>
@@ -155,13 +193,13 @@ const CHARACTERS = [
 ];
 let selectedCharIndex = 0;
 
-// --- 魚類等級品質定義 (除最後一款外適用) ---
+// --- 魚類等級品質定義 ---
 const FISH_QUALITIES = [
-    { name: "一般", badge: "", diffMult: 1.0, scoreMult: 1.0, weight: 50 },
-    { name: "優良", badge: "★", diffMult: 1.25, scoreMult: 1.5, weight: 25 },
-    { name: "稀有", badge: "★★", diffMult: 1.5, scoreMult: 2.0, weight: 15 },
-    { name: "史詩", badge: "★★★", diffMult: 1.75, scoreMult: 3.0, weight: 8 },
-    { name: "傳說", badge: "👑", diffMult: 2.0, scoreMult: 5.0, weight: 2 }
+    { name: "一般", badge: "", diffMult: 1.2, scoreMult: 1.0, weight: 50 },
+    { name: "優良", badge: "★", diffMult: 1.5, scoreMult: 1.5, weight: 25 },
+    { name: "稀有", badge: "★★", diffMult: 1.9, scoreMult: 2.0, weight: 15 },
+    { name: "史詩", badge: "★★★", diffMult: 2.4, scoreMult: 3.0, weight: 8 },
+    { name: "傳說", badge: "👑", diffMult: 3.0, scoreMult: 5.0, weight: 2 }
 ];
 
 // --- 遊戲狀態 ---
@@ -189,7 +227,7 @@ let powerDirection = 1;
 let totalScore = 0;
 let totalCatches = 0;
 
-// 特效粒子 (櫻花花瓣)
+// 特效粒子
 const sakuraPetals = Array.from({ length: 40 }, () => ({
     x: Math.random() * 540,
     y: Math.random() * 480,
@@ -199,22 +237,22 @@ const sakuraPetals = Array.from({ length: 40 }, () => ({
     rot: Math.random() * 360
 }));
 
-// --- PARKSIDE 釣魚竿商店 ---
+// --- 釣魚竿商店 ---
 const RODS = [
     { id: "bamboo", name: "初新手作竿", price: 0, reelSpeed: 0.8, tensionMult: 0.8, color: "#e9c46a", owned: true },
-    { id: "strawberry", name: "草莓甜心竿", price: 600, reelSpeed: 1.0, tensionMult: 0.65, color: "#ff85a2", owned: false },
-    { id: "catpaw", name: "貓咪肉墊竿", price: 2000, reelSpeed: 1.3, tensionMult: 0.45, color: "#b8c0ff", owned: false },
-    { id: "sakura_god", name: "六合彩神竿", price: 9999, reelSpeed: 1.7, tensionMult: 0.25, color: "#ffd166", owned: false }
+    { id: "strawberry", name: "草莓甜心竿", price: 500, reelSpeed: 1.0, tensionMult: 0.65, color: "#ff85a2", owned: false },
+    { id: "catpaw", name: "貓咪肉墊竿", price: 3000, reelSpeed: 1.3, tensionMult: 0.45, color: "#b8c0ff", owned: false },
+    { id: "sakura_god", name: "六合彩神竿", price: 9527, reelSpeed: 2.7, tensionMult: 0.20, color: "#ffd166", owned: false }
 ];
 let equippedRodIndex = 0;
 
-// --- 日系Q版可愛魚種定義 ---
+// --- 魚種定義 ---
 const FISH_SPECIES = [
-    { id: "goldfish", name: "櫻花小金魚", color: "#ff758f", belly: "#fff0f5", difficulty: 0.6, size: 28, score: 10, count: 0, weight: 45, icon: "🐟", isSpecial: false },
-    { id: "dango", name: "三色團子魚", color: "#a8e6cf", belly: "#ffd3b6", difficulty: 0.95, size: 34, score: 50, count: 0, weight: 30, icon: "🍡", isSpecial: false },
-    { id: "takoyaki", name: "章魚燒小章魚", color: "#ff8b94", belly: "#ffaaa5", difficulty: 1.4, size: 38, score: 100, count: 0, weight: 18, icon: "🐙", isSpecial: false },
-    { id: "shiba", name: "柴犬水母", color: "#f0a868", belly: "#fff2df", difficulty: 1.9, size: 44, score: 200, count: 0, weight: 6, icon: "🐕", isSpecial: false },
-    { id: "koi_god", name: "錦鯉大檸樂", color: "#ff4757", belly: "#ffd700", difficulty: 2.8, size: 52, score: 1000, count: 0, weight: 1, isSpecial: true, icon: "✨" }
+    { id: "goldfish", name: "櫻花小金魚", color: "#ff758f", belly: "#fff0f5", difficulty: 0.6, size: 28, score: 100, count: 0, weight: 45, icon: "🐟", isSpecial: false },
+    { id: "dango", name: "三色團子魚", color: "#a8e6cf", belly: "#ffd3b6", difficulty: 0.95, size: 34, score: 220, count: 0, weight: 30, icon: "🍡", isSpecial: false },
+    { id: "takoyaki", name: "章魚燒小章魚", color: "#ff8b94", belly: "#ffaaa5", difficulty: 1.4, size: 38, score: 380, count: 0, weight: 18, icon: "🐙", isSpecial: false },
+    { id: "shiba", name: "柴犬水母", color: "#f0a868", belly: "#fff2df", difficulty: 1.9, size: 44, score: 600, count: 0, weight: 6, icon: "🐕", isSpecial: false },
+    { id: "koi_god", name: "錦鯉大檸樂", color: "#ff4757", belly: "#ffd700", difficulty: 2.8, size: 52, score: 2200, count: 0, weight: 1, isSpecial: true, icon: "✨" }
 ];
 
 // 音效
@@ -304,7 +342,7 @@ function handlePressEnd(e) {
     actionBtn.classList.remove('active');
 
     if (gameState === "CHARGING") {
-        remainingLines--; // 消耗 1 條魚線
+        remainingLines--;
         fishDistance = 25.0 + (castPower / 100.0) * 70.0;
         playSound("sine", 400, 900, 0.2, 0.2);
         gameState = "WAITING";
@@ -338,6 +376,7 @@ shopBtn.addEventListener('click', () => {
     }
 });
 
+// 畫布點擊 (經縮放轉換的精確座標計算)
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -348,7 +387,7 @@ canvas.addEventListener('click', (e) => {
     if (gameState === "SELECT_CHAR") {
         CHARACTERS.forEach((c, idx) => {
             const cardX = 50 + idx * 210;
-            const cardY = 120;
+            const cardY = 110;
             if (clickX >= cardX && clickX <= cardX + 190 && clickY >= cardY && clickY <= cardY + 250) {
                 selectedCharIndex = idx;
                 playSound("sine", 800, 1000, 0.1, 0.2);
@@ -360,10 +399,10 @@ canvas.addEventListener('click', (e) => {
     if (currentTab === "SHOP") {
         const px = 530;
 
-        // 1. 釣竿購買
+        // 1. 釣竿選擇
         RODS.forEach((rod, index) => {
-            const yOff = 110 + index * 65;
-            const btnX = px + 25, btnY = yOff + 22, btnW = 135, btnH = 24;
+            const yOff = 120 + index * 62;
+            const btnX = px + 24, btnY = yOff + 22, btnW = 140, btnH = 22;
 
             if (clickX >= btnX && clickX <= btnX + btnW && clickY >= btnY && clickY <= btnY + btnH) {
                 if (!rod.owned) {
@@ -388,9 +427,8 @@ canvas.addEventListener('click', (e) => {
             }
         });
 
-        // 2. 魚線購買區域 (單條 100PT / 5條 400PT)
+        // 2. 魚線購買區
         const lineShopY = 370;
-        // 單條魚線
         if (clickX >= px + 15 && clickX <= px + 90 && clickY >= lineShopY + 25 && clickY <= lineShopY + 50) {
             if (totalScore >= 100) {
                 totalScore -= 100;
@@ -404,7 +442,6 @@ canvas.addEventListener('click', (e) => {
                 noticeTimer = Date.now() + 1500;
             }
         }
-        // 5 條魚線
         if (clickX >= px + 100 && clickX <= px + 175 && clickY >= lineShopY + 25 && clickY <= lineShopY + 50) {
             if (totalScore >= 400) {
                 totalScore -= 400;
@@ -421,7 +458,6 @@ canvas.addEventListener('click', (e) => {
     }
 });
 
-// 日系馬卡龍色調天空與大海
 function drawKawaiiBackground(now) {
     const skyGrad = ctx.createLinearGradient(0, 0, 0, 210);
     skyGrad.addColorStop(0, "#ffdde1");
@@ -429,11 +465,9 @@ function drawKawaiiBackground(now) {
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, 530, 210);
 
-    // 太陽 / 雲朵
     ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(440, 55, 28, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "#fffae6"; ctx.beginPath(); ctx.arc(440, 55, 22, 0, Math.PI * 2); ctx.fill();
 
-    // Q版棉花雲
     ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
     ctx.beginPath();
     ctx.arc(100, 70, 18, 0, Math.PI * 2);
@@ -441,7 +475,6 @@ function drawKawaiiBackground(now) {
     ctx.arc(145, 70, 18, 0, Math.PI * 2);
     ctx.fill();
 
-    // 遠處可愛波浪山丘
     ctx.fillStyle = "#b5e2fa";
     ctx.beginPath();
     ctx.moveTo(0, 210);
@@ -449,19 +482,16 @@ function drawKawaiiBackground(now) {
     ctx.quadraticCurveTo(390, 170, 530, 210);
     ctx.fill();
 
-    // 馬卡龍色系水面
     const seaGrad = ctx.createLinearGradient(0, 210, 0, 480);
     seaGrad.addColorStop(0, "#70d6ff");
     seaGrad.addColorStop(1, "#ff70a6");
     ctx.fillStyle = seaGrad;
     ctx.fillRect(0, 210, 530, 270);
 
-    // 可愛草地木頭碼頭
     ctx.fillStyle = "#a8e6cf";
     ctx.beginPath(); ctx.roundRect(0, 180, 140, 45, [0, 15, 15, 0]); ctx.fill();
     ctx.fillStyle = "#ffaaa5"; ctx.fillRect(0, 195, 120, 12);
 
-    // 櫻花飄落粒子
     ctx.fillStyle = "#ffb3c1";
     sakuraPetals.forEach(p => {
         p.y += p.speedY; p.x += Math.sin(now * 0.002) * p.speedX;
@@ -472,7 +502,6 @@ function drawKawaiiBackground(now) {
     });
 }
 
-// 繪製日系 Q 版角色
 function drawKawaiiFisherman(x, y, charData) {
     const c = charData || CHARACTERS[selectedCharIndex];
     let bounceY = (gameState === "RESULT" && resultMsg.includes("成功")) ? Math.abs(Math.sin(Date.now() * 0.015)) * -14 : 0;
@@ -508,7 +537,6 @@ function drawKawaiiFisherman(x, y, charData) {
     }
 }
 
-// 繪製 Q 版卡通魚
 function drawKawaiiFish(x, y, fish, scale=1.0) {
     const s = fish.size * scale;
     ctx.fillStyle = fish.color;
@@ -531,7 +559,6 @@ function drawKawaiiFish(x, y, fish, scale=1.0) {
     ctx.fill();
 }
 
-// 角色選擇畫面
 function drawCharacterSelectScreen() {
     ctx.fillStyle = "#fff5f6";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -578,7 +605,6 @@ function drawCharacterSelectScreen() {
     ctx.textAlign = "left";
 }
 
-// 側邊欄 (圖鑑與商店)
 function drawSidebar() {
     const px = 530, py = 0, pw = 190, ph = 480;
     ctx.fillStyle = "#fff0f3"; ctx.fillRect(px, py, pw, ph);
@@ -590,7 +616,6 @@ function drawSidebar() {
     ctx.fillText(`總獲得點數: ${totalScore} pt`, px + 15, py + 46);
     ctx.fillText(`成功釣起數: ${totalCatches} 尾`, px + 15, py + 64);
     
-    // 魚線顯示
     ctx.fillStyle = remainingLines <= 2 ? "#e63946" : "#0077b6";
     ctx.font = "bold 13px sans-serif";
     ctx.fillText(`🧶 剩餘魚線: ${remainingLines} 條`, px + 15, py + 84);
@@ -613,9 +638,8 @@ function drawSidebar() {
         });
     } else {
         ctx.fillStyle = "#0077b6"; ctx.font = "bold 14px sans-serif";
-        ctx.fillText("🛒 釣竿與魚線", px + 28, py + 112);
+        ctx.fillText("🛒 釣竿與魚線工坊", px + 28, py + 112);
 
-        // 釣竿列表
         RODS.forEach((rod, index) => {
             const yOff = py + 120 + index * 62;
             ctx.fillStyle = rod.color;
@@ -643,21 +667,18 @@ function drawSidebar() {
             }
         });
 
-        // 魚線購買區
         const lineShopY = 370;
         ctx.strokeStyle = "#ffb3c1"; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(px + 15, lineShopY); ctx.lineTo(px + 175, lineShopY); ctx.stroke();
 
         ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 12px sans-serif";
-        ctx.fillText("🧶 補充魚線 由PARKSIDE提供", px + 55, lineShopY + 16);
+        ctx.fillText("🧶 補充魚線", px + 55, lineShopY + 16);
 
-        // 1 條按鈕
         ctx.fillStyle = totalScore >= 100 ? "#ff85a2" : "#cbd5e1";
         ctx.beginPath(); ctx.roundRect(px + 15, lineShopY + 25, 75, 25, 12); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
         ctx.fillText("+1條(100pt)", px + 20, lineShopY + 41);
 
-        // 5 條按鈕
         ctx.fillStyle = totalScore >= 400 ? "#ff4757" : "#cbd5e1";
         ctx.beginPath(); ctx.roundRect(px + 100, lineShopY + 25, 75, 25, 12); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
@@ -681,7 +702,6 @@ function update() {
         playSound("sine", 700, 1100, 0.2, 0.3);
         currentFish = getRandomFish();
 
-        // 如果不是最後一款特殊魚 (錦鯉大明神)，隨機生成品質等級
         if (!currentFish.isSpecial) {
             currentFishQuality = getRandomQuality();
         } else {
@@ -720,7 +740,6 @@ function update() {
                 playSound("sine", 600, 1200, 0.35, 0.3);
                 currentFish.count++;
                 
-                // 成功釣到保留魚線
                 remainingLines++; 
 
                 const gainedScore = Math.floor(currentFish.score * currentFishQuality.scoreMult);
@@ -748,7 +767,6 @@ function render() {
     drawKawaiiBackground(now);
     drawKawaiiFisherman(50, 155, CHARACTERS[selectedCharIndex]);
 
-    // 浮標與釣線
     if (gameState === "WAITING" || gameState === "FIGHTING") {
         const rodTipX = 115;
         const rodTipY = 135;

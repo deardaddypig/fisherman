@@ -29,832 +29,1685 @@
   });
 </script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Kawaii Fishing Paradise - Mobile Responsive Pro</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background-color: #fce4ec;
-            color: #5d4037;
-            font-family: 'Hiragino Maru Gothic ProN', 'Quicksand', 'Comfortaa', '微軟正黑體', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            padding: 15px;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
 
-        /* 遊戲主容器 */
-        #game-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 720px;
-            box-shadow: 0 12px 30px rgba(233, 110, 150, 0.25);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 5px solid #fff;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Fishing Festival - 釣魚物語</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts for Kawaii Aesthetic -->
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 
-        /* Canvas 畫布適應 */
-        canvas {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 720 / 480;
-            display: block;
-        }
-
-        /* 獨立控制按鈕區（位於遊戲畫布下方，不再遮擋遊戲畫面） */
-        #touch-controls {
-            width: 100%;
-            background: #fff5f6;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            border-top: 2px dashed #ffccd5;
-        }
-
-        .action-btn {
-            flex: 1;
-            max-width: 180px;
-            height: 52px;
-            background: linear-gradient(180deg, #ff9a9e, #fecfef);
-            border: 3px solid #ffffff;
-            border-radius: 26px;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 800;
-            text-shadow: 0 2px 4px rgba(214, 80, 115, 0.5);
-            box-shadow: 0 5px 0px #f48fb1, 0 8px 15px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            touch-action: manipulation;
-            transition: all 0.08s ease;
-            letter-spacing: 1px;
-        }
-        .action-btn:active, .action-btn.active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0px #f48fb1, 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .shop-toggle-btn {
-            background: linear-gradient(180deg, #a1c4fd, #c2e9fb);
-            box-shadow: 0 5px 0px #90caf9, 0 8px 15px rgba(0,0,0,0.1);
-            text-shadow: 0 2px 4px rgba(60, 120, 180, 0.5);
-        }
-
-        /* 針對手機直屏的優化媒體查詢 */
-        @media (max-width: 600px) {
-            body {
-                padding: 5px;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            kawaii: {
+              pink: '#FFB7C5',
+              softPink: '#FFE4E1',
+              cherry: '#FF6B8B',
+              cream: '#FFFDD0',
+              wood: '#D7A15C',
+              darkWood: '#8B5A2B',
+              woodLight: '#F5E6D3',
+              skyDay: '#A2E8DD',
+              skyNight: '#2C3E50',
+              mint: '#B2F2BB',
+              lavender: '#E6C9FF',
+              gold: '#FFD700'
             }
-            #game-wrapper {
-                border-radius: 12px;
-                border-width: 3px;
-            }
-            .action-btn {
-                height: 48px;
-                font-size: 15px;
-            }
+          },
+          fontFamily: {
+            rounded: ['"M PLUS Rounded 1c"', 'Fredoka', 'sans-serif']
+          }
         }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'M PLUS Rounded 1c', 'Fredoka', sans-serif;
+      background: linear-gradient(135deg, #FFE4E1 0%, #E6C9FF 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Wood Texture Effect */
+    .wood-panel {
+      background: #F5E6D3;
+      border: 4px solid #8B5A2B;
+      box-shadow: inset 0 0 10px rgba(139, 90, 43, 0.3), 0 8px 16px rgba(0,0,0,0.15);
+      border-radius: 20px;
+    }
+
+    .wood-button {
+      background: linear-gradient(180deg, #D7A15C 0%, #A67C52 100%);
+      border: 3px solid #5C3A1E;
+      box-shadow: 0 4px 0 #5C3A1E, inset 0 2px 0 rgba(255,255,255,0.4);
+      transition: all 0.1s ease;
+    }
+
+    .wood-button:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #5C3A1E, inset 0 2px 0 rgba(0,0,0,0.2);
+    }
+
+    .wood-button:disabled {
+      filter: grayscale(0.7);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Kawaii Pill Buttons */
+    .btn-kawaii-pink {
+      background: linear-gradient(180deg, #FF9EAA 0%, #FF6B8B 100%);
+      border: 3px solid #D8436B;
+      box-shadow: 0 4px 0 #D8436B, inset 0 2px 0 rgba(255,255,255,0.4);
+    }
+    .btn-kawaii-pink:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #D8436B;
+    }
+
+    .btn-kawaii-green {
+      background: linear-gradient(180deg, #8CE99A 0%, #51CF66 100%);
+      border: 3px solid #2B8A3E;
+      box-shadow: 0 4px 0 #2B8A3E, inset 0 2px 0 rgba(255,255,255,0.4);
+    }
+    .btn-kawaii-green:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #2B8A3E;
+    }
+
+    .btn-kawaii-blue {
+      background: linear-gradient(180deg, #74C0FC 0%, #339AF0 100%);
+      border: 3px solid #1864AB;
+      box-shadow: 0 4px 0 #1864AB, inset 0 2px 0 rgba(255,255,255,0.4);
+    }
+    .btn-kawaii-blue:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #1864AB;
+    }
+
+    /* Pulse & Shake Animation */
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 1.2s infinite ease-in-out;
+    }
+
+    @keyframes tensionShake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-3px, 2px); }
+      50% { transform: translate(3px, -2px); }
+      75% { transform: translate(-2px, -3px); }
+      100% { transform: translate(0, 0); }
+    }
+    .shake-danger {
+      animation: tensionShake 0.15s infinite ease-in-out;
+    }
+
+    /* Custom Scrollbar for Logs */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F5E6D3;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D7A15C;
+      border-radius: 8px;
+      border: 2px solid #8B5A2B;
+    }
+  </style>
 </head>
-<body>
+<body class="flex flex-col items-center justify-start min-h-screen p-2 sm:p-4 text-gray-800">
 
-<div id="game-wrapper">
-    <canvas id="gameCanvas" width="720" height="480"></canvas>
-    <!-- 控制按鈕移至 Canvas 畫布外部，徹底解決遮擋內容問題 -->
-    <div id="touch-controls">
-        <div id="btn-action" class="action-btn">決定!</div>
-        <div id="btn-shop" class="action-btn shop-toggle-btn">圖鑑 »</div>
+  <!-- Toast Notification Container -->
+  <div id="gameToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full bg-amber-900/90 text-yellow-100 border-2 border-yellow-300 shadow-xl font-bold text-sm sm:text-base pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 flex items-center gap-2">
+    <i class="fas fa-sparkles text-yellow-300"></i>
+    <span id="toastMsg">Welcome!</span>
+  </div>
+
+  <div class="max-w-4xl w-full flex flex-col gap-3">
+    
+    <!-- Header Navigation & Stats Bar -->
+    <header class="wood-panel p-3 sm:p-4 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="text-3xl sm:text-4xl">🌸</span>
+        <div>
+          <h1 class="font-extrabold text-amber-950 text-base sm:text-xl tracking-tight leading-tight">釣魚物語</h1>
+          <p class="text-[10px] sm:text-xs text-amber-800 font-semibold" id="headerSub">Kawaii Fishing Festival</p>
+        </div>
+      </div>
+
+      <!-- Stats Pill Displays -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <!-- Score PT -->
+        <div class="bg-amber-100/90 border-2 border-amber-600 rounded-2xl px-3 py-1 flex items-center gap-1.5 shadow-sm">
+          <i class="fas fa-coins text-yellow-500 text-sm"></i>
+          <span class="text-xs text-amber-900 font-bold" id="lblScoreText">PT:</span>
+          <span id="txtScore" class="font-black text-amber-950 text-sm sm:text-base">0</span>
+        </div>
+
+        <!-- Lines Left -->
+        <div class="bg-amber-100/90 border-2 border-amber-600 rounded-2xl px-3 py-1 flex items-center gap-1.5 shadow-sm">
+          <i class="fas fa-dharmachakra text-rose-500 text-sm"></i>
+          <span class="text-xs text-amber-900 font-bold" id="lblLinesText">魚線:</span>
+          <span id="txtLines" class="font-black text-rose-700 text-sm sm:text-base">10</span>
+        </div>
+
+        <!-- Quick Nav Buttons -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="toggleModal('shopModal')" class="wood-button p-2 text-white text-xs rounded-xl flex items-center justify-center font-extrabold" title="Shop">
+            <i class="fas fa-store text-yellow-300"></i>
+          </button>
+          <button onclick="toggleModal('logModal')" class="wood-button p-2 text-white text-xs rounded-xl flex items-center justify-center font-extrabold" title="Fish Book">
+            <i class="fas fa-book text-emerald-300"></i>
+          </button>
+          <button onclick="toggleModal('leaderModal')" class="wood-button p-2 text-white text-xs rounded-xl flex items-center justify-center font-extrabold" title="Leaderboard">
+            <i class="fas fa-trophy text-amber-300"></i>
+          </button>
+          <button onclick="toggleLanguage()" class="wood-button px-2.5 py-1 text-white text-xs rounded-xl font-extrabold" id="btnLangToggle">
+            繁中/EN
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Game Screen Area -->
+    <main class="relative w-full rounded-3xl overflow-hidden border-4 border-amber-800 shadow-2xl bg-sky-200 h-[360px] sm:h-[420px] flex items-center justify-center">
+      
+      <!-- Canvas Canvas -->
+      <canvas id="gameCanvas" class="w-full h-full block cursor-pointer"></canvas>
+
+      <!-- Tension Bar Overlay (Visible during FISHING / REELING state) -->
+      <div id="tensionGaugeContainer" class="absolute top-4 left-1/2 -translate-x-1/2 w-11/12 max-w-md bg-amber-950/80 backdrop-blur-md p-3 rounded-2xl border-2 border-amber-400 shadow-2xl hidden transition-all">
+        <div class="flex justify-between items-center text-xs text-amber-200 font-bold mb-1">
+          <span id="lblTensionTitle"><i class="fas fa-gauge-high mr-1 text-rose-400"></i>LINE TENSION</span>
+          <span id="uiDistanceLabel" class="text-yellow-300 font-black">20.0m</span>
+        </div>
+        <!-- Progress Tension Bar -->
+        <div class="w-full h-5 bg-gray-900/90 rounded-full border-2 border-amber-300/80 overflow-hidden relative">
+          <div id="tensionBarInner" class="h-full bg-gradient-to-r from-emerald-400 via-yellow-400 to-rose-600 w-0 transition-all duration-75 rounded-full"></div>
+        </div>
+        <p id="tensionWarning" class="text-[10px] text-center text-rose-300 font-black mt-1 uppercase tracking-wider hidden shake-danger">
+          ⚠️ DANGER! RELEASE SPACE / REEL BUTTON!
+        </p>
+      </div>
+
+      <!-- CAST POWER CHARGING OVERLAY -->
+      <div id="castContainer" class="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center p-4 z-20 hidden">
+        <div class="wood-panel p-5 sm:p-6 text-center max-w-sm w-full shadow-2xl flex flex-col items-center">
+          <h3 class="text-base sm:text-lg font-black text-amber-950 mb-1 flex items-center gap-2" id="castTitleText">
+            <i class="fas fa-bullseye text-rose-500"></i> 儲力命中目標!  CHARGE & MATCH TARGET!
+          </h3>
+          <p class="text-xs text-amber-900 font-bold mb-4" id="castSubText">
+            Hold button or SPACE, then release in the <span class="text-emerald-700 font-black underline">目標 TARGET </span>!
+          </p>
+
+          <!-- Power Bar Box -->
+          <div class="relative w-full h-8 bg-gray-800 rounded-2xl border-3 border-amber-700 shadow-inner overflow-hidden mb-3">
+            <!-- Target Green Zone -->
+            <div id="targetZone" class="absolute top-0 bottom-0 bg-emerald-500/80 border-x-2 border-white/80 shadow-md flex items-center justify-center transition-all">
+              <span class="text-[9px] font-black text-white uppercase tracking-wider">TARGET</span>
+            </div>
+            <!-- Power Indicator Bar -->
+            <div id="powerBar" class="h-full bg-gradient-to-r from-yellow-300 via-rose-400 to-purple-500 w-0 transition-none"></div>
+            <!-- Pointer -->
+            <div id="meterPointer" class="absolute top-0 bottom-0 w-2 bg-yellow-300 border-2 border-amber-950 -ml-1 transition-none shadow-md z-10 hidden"></div>
+          </div>
+
+          <!-- Target & Power Status Text -->
+          <div class="flex justify-between items-center w-full text-xs font-bold text-amber-950 mb-4 px-1">
+            <span>Power: <span id="powerPercent" class="text-rose-600 font-black">0%</span></span>
+            <span id="targetRangeText" class="text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-lg border border-emerald-400">
+              Target: 40% - 65%
+            </span>
+          </div>
+
+          <!-- Cast Action Button -->
+          <button id="btnHoldCast" class="wood-button w-full py-3.5 text-white font-black text-base sm:text-lg rounded-2xl shadow-lg cursor-pointer">
+            <i class="fas fa-hand-pointer mr-1"></i> <span id="castBtnLabel">HOLD TO CHARGE</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Controls Area -->
+    <div class="wood-panel p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      
+      <!-- Character Locked Info Badge -->
+      <div id="characterProfileDisplay" class="flex items-center gap-3 bg-amber-100/90 border-2 border-amber-500 rounded-2xl p-2.5 w-full sm:w-auto shadow-inner">
+        <div id="activeCharAvatar" class="text-3xl sm:text-4xl">🐱</div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="activeCharName" class="font-black text-amber-950 text-sm sm:text-base">貓咪</span>
+            <span id="lblCharLocked" class="text-[10px] bg-amber-800 text-amber-100 font-extrabold px-2 py-0.5 rounded-full">
+              🔒 已鎖定 (Locked)
+            </span>
+          </div>
+          <p id="activeCharPerk" class="text-xs text-rose-700 font-extrabold">收線速度 +10%</p>
+        </div>
+      </div>
+
+      <!-- Primary Fishing Action Button -->
+      <div class="w-full sm:w-64">
+        <button id="btnMainAction" class="btn-kawaii-pink w-full py-3.5 sm:py-4 rounded-2xl text-white font-black text-base sm:text-lg shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-transform active:scale-95">
+          <i class="fas fa-fish-fins text-yellow-200"></i>
+          <span id="txtMainAction">拋竿 </span>
+        </button>
+      </div>
     </div>
-</div>
 
-<script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const actionBtn = document.getElementById('btn-action');
-const shopBtn = document.getElementById('btn-shop');
+  </div>
 
-// --- 日系Q版角色定義 ---
-const CHARACTERS = [
-    {
-        id: "sakura",
-        name: "Daddy Pig",
-        desc: "二四七的釣魚客",
-        hatColor: "#ff85a2",
-        hatBrim: "#ffb3c1",
-        skinColor: "#fff0f5",
-        shirtColor: "#ff758f",
-        pantsColor: "#70d6ff",
-        hairColor: "#ff4d6d",
-        blush: "#ff70a6"
-    },
-    {
-        id: "matcha",
-        name: "Pascal",
-        desc: "騙財課金的客服",
-        hatColor: "#a3e635",
-        hatBrim: "#bef264",
-        skinColor: "#fff5eb",
-        shirtColor: "#65a30d",
-        pantsColor: "#475569",
-        hairColor: "#3f6212",
-        blush: "#f87171"
-    },
-    {
-        id: "taiyo",
-        name: "Florian",
-        desc: "沉著冷靜的問題大叔",
-        hatColor: "#fbbf24",
-        hatBrim: "#fef08a",
-        skinColor: "#fde047",
-        shirtColor: "#f97316",
-        pantsColor: "#0284c7",
-        hairColor: "#d97706",
-        blush: "#fb923c"
+  <!-- MODAL: CHARACTER SELECTION AT START -->
+  <div id="charSelectModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-3">
+    <div class="wood-panel max-w-lg w-full p-6 text-center relative shadow-2xl flex flex-col items-center">
+      <h2 id="charSelectTitle" class="text-xl sm:text-2xl font-black text-amber-950 mb-1 flex items-center gap-2">
+        🌸 選擇你的漁夫角色 Choose Character
+      </h2>
+      <p id="charSelectSub" class="text-xs sm:text-sm text-amber-900 font-bold mb-4">
+        ⚠️ 選擇後此局不可更改！每個角色擁有獨特加成。
+      </p>
+
+      <div class="grid grid-cols-3 gap-3 w-full mb-5" id="charSelectGrid">
+        <!-- Injected via JS -->
+      </div>
+
+      <button id="btnConfirmChar" onclick="confirmInitialCharacter()" class="btn-kawaii-pink w-full py-3 text-white font-black text-base rounded-2xl shadow-lg">
+        確定選擇 Confirm Selection
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: SHOP -->
+  <div id="shopModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 hidden">
+    <div class="wood-panel max-w-lg w-full p-5 relative flex flex-col max-h-[90vh]">
+      <button onclick="toggleModal('shopModal')" class="absolute top-3 right-3 text-amber-950 hover:text-rose-600 text-xl font-extrabold">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <h2 class="text-lg font-black text-amber-950 mb-2 flex items-center gap-2" id="shopTitle">
+        <i class="fas fa-store text-amber-700"></i> 裝備商店 Shop
+      </h2>
+
+      <!-- Shop Navigation Tabs -->
+      <div class="flex gap-2 mb-3 border-b-2 border-amber-300 pb-2 overflow-x-auto">
+        <button onclick="switchShopTab('rods')" id="tabBtnRods" class="px-3 py-1.5 rounded-xl font-black text-xs bg-amber-800 text-white shadow">
+          🎣 <span id="lblTabRods">釣竿 Rods</span>
+        </button>
+        <button onclick="switchShopTab('outfits')" id="tabBtnOutfits" class="px-3 py-1.5 rounded-xl font-black text-xs bg-amber-200 text-amber-900 hover:bg-amber-300">
+          👕 <span id="lblTabOutfits">衣服 Clothes</span>
+        </button>
+        <button onclick="switchShopTab('hats')" id="tabBtnHats" class="px-3 py-1.5 rounded-xl font-black text-xs bg-amber-200 text-amber-900 hover:bg-amber-300">
+          👒 <span id="lblTabHats">帽子 Hats</span>
+        </button>
+      </div>
+
+      <!-- Shop Content List -->
+      <div class="overflow-y-auto space-y-2.5 pr-1 my-1 flex-1" id="shopItemList">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="pt-3 border-t-2 border-amber-300 flex justify-between items-center">
+        <button onclick="buyLines(5, 50)" class="btn-kawaii-green px-4 py-2 text-white font-extrabold text-xs rounded-xl">
+          <i class="fas fa-plus mr-1"></i> +5 魚線 (50 PT)
+        </button>
+        <button onclick="toggleModal('shopModal')" class="wood-button px-4 py-2 text-white font-extrabold text-xs rounded-xl">
+          關閉 Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FISH COLLECTION LOG -->
+  <div id="logModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 hidden">
+    <div class="wood-panel max-w-md w-full p-5 relative flex flex-col max-h-[90vh]">
+      <button onclick="toggleModal('logModal')" class="absolute top-3 right-3 text-amber-950 hover:text-rose-600 text-xl font-extrabold">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <h2 class="text-lg font-black text-amber-950 mb-3 flex items-center gap-2" id="logTitle">
+        <i class="fas fa-book text-emerald-700"></i> 水族圖鑑 Fish Log
+      </h2>
+
+      <div class="overflow-y-auto space-y-2 pr-1 my-2 flex-1" id="fishLogList">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="pt-2 border-t-2 border-amber-300 text-right">
+        <button onclick="toggleModal('logModal')" class="wood-button px-4 py-2 text-white font-extrabold text-xs rounded-xl">
+          關閉 Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LEADERBOARD -->
+  <div id="leaderModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 hidden">
+    <div class="wood-panel max-w-md w-full p-5 relative flex flex-col max-h-[90vh]">
+      <button onclick="toggleModal('leaderModal')" class="absolute top-3 right-3 text-amber-950 hover:text-rose-600 text-xl font-extrabold">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <h2 class="text-lg font-black text-amber-950 mb-3 flex items-center gap-2" id="leaderTitle">
+        <i class="fas fa-trophy text-amber-600"></i> 排行榜 Leaderboard
+      </h2>
+
+      <div class="overflow-y-auto space-y-2 pr-1 my-2 flex-1" id="leaderboardList">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="pt-2 border-t-2 border-amber-300 text-right">
+        <button onclick="toggleModal('leaderModal')" class="wood-button px-4 py-2 text-white font-extrabold text-xs rounded-xl">
+          關閉 Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: RESULT / CATCH OVERLAY -->
+  <div id="resultModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 hidden">
+    <div class="wood-panel max-w-sm w-full p-6 text-center relative shadow-2xl flex flex-col items-center">
+      <div id="resultIcon" class="text-6xl my-2 pulse-glow">🐟</div>
+      <h3 id="resultTitle" class="text-xl font-black text-amber-950 mb-1">Catch Success!</h3>
+      <p id="resultDesc" class="text-sm font-extrabold text-amber-800 mb-2">+100 PT</p>
+      
+      <div id="resultFishBadge" class="bg-white/80 border-2 border-amber-400 rounded-xl px-4 py-2 my-2 w-full">
+        <div class="font-extrabold text-amber-950 text-base" id="resultFishName">櫻花金魚</div>
+        <div class="text-xs font-bold text-rose-600" id="resultFishQuality">品質: 珍稀 (Rare)</div>
+      </div>
+
+      <button onclick="closeResultModal()" class="btn-kawaii-pink w-full py-3 mt-3 text-white font-extrabold text-base rounded-2xl shadow-md">
+        確定 Confirm
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // --- GAME CONSTANTS & DATA ---
+    const CHARACTERS = [
+      { id: 'pascal', name: '貓咪', avatar: '🐱', color: '#FFB7C5', perk: 'reel', bonusText: '收線速度 +10%' },
+      { id: 'florian', name: '兔仔', avatar: '🐰', color: '#B2F2BB', perk: 'tension', bonusText: '抗拉力 +20%' },
+      { id: 'kern', name: '柴犬', avatar: '🐶', color: '#FFD700', perk: 'score', bonusText: '釣魚得分 +10%' }
+    ];
+
+    const RODS = [
+      { id: 'rod_bamboo', name: { zh: '二手竹竿', en: 'Bamboo Rod' }, price: 0, reelSpeed: 1.0, tensionReduction: 1.0, color: '#D7A15C' },
+      { id: 'rod_sakura', name: { zh: '誠實之竿', en: 'Shing Rod' }, price: 150, reelSpeed: 1.25, tensionReduction: 0.85, color: '#FF9EAA' },
+      { id: 'rod_golden', name: { zh: '黃金釣竿', en: 'Emperor Rod' }, price: 1000, reelSpeed: 1.5, tensionReduction: 0.70, color: '#FFD700' }
+    ];
+
+    const OUTFITS = [
+      { id: 'outfit_denim', name: { zh: '經典牛仔藍', en: 'Classic Denim Blue' }, price: 0, color: '#3B82F6' },
+      { id: 'outfit_sakura', name: { zh: '櫻花粉紅衫', en: 'Sakura Pink Outfit' }, price: 80, color: '#EC4899' },
+      { id: 'outfit_yellow', name: { zh: '活力鮮黃衫', en: 'Vibrant Yellow Outfit' }, price: 120, color: '#EAB308' },
+      { id: 'outfit_mint', name: { zh: '薄荷青綠衫', en: 'Mint Green Outfit' }, price: 180, color: '#10B981' },
+      { id: 'outfit_purple', name: { zh: '夢幻紫色衫', en: 'Dreamy Purple Outfit' }, price: 250, color: '#A855F7' }
+    ];
+
+    const HATS = [
+      { id: 'hat_none', name: { zh: '無帽', en: 'No Hat' }, price: 0, type: 'none', color: 'transparent' },
+      { id: 'hat_straw', name: { zh: '草帽', en: 'Straw Sun Hat' }, price: 200, type: 'straw', color: '#FACC15' },
+      { id: 'hat_bucket', name: { zh: '漁夫帽', en: 'Fisherman Bucket Hat' }, price: 400, type: 'bucket', color: '#047857' },
+      { id: 'hat_cap', name: { zh: '鴨舌帽', en: 'Baseball Cap' }, price: 700, type: 'cap', color: '#EF4444' },
+      { id: 'hat_crown', name: { zh: '金皇冠', en: 'Golden Crown' }, price: 1000, type: 'crown', color: '#F59E0B' }
+    ];
+
+    const FISH_SPECIES = [
+      { id: 'goldfish', name: { zh: '櫻花小金魚', en: 'Sakura Goldfish' }, icon: '🐠', baseScore: 3, color: '#FF6B8B', strugglePower: 1.0 },
+      { id: 'clownfish', name: { zh: '熱帶小丑魚', en: 'Tropical Clownfish' }, icon: '🐟', baseScore: 5, color: '#FF922B', strugglePower: 1.2 },
+      { id: 'koi', name: { zh: '錦鯉吉祥物', en: 'Lucky Koi' }, icon: '🐡', baseScore: 9, color: '#FCC419', strugglePower: 1.5 },
+      { id: 'squid', name: { zh: '幻彩小烏賊', en: 'Rainbow Squid' }, icon: '🦑', baseScore: 14, color: '#CC5DE8', strugglePower: 1.8 },
+      { id: 'turtle', name: { zh: '長壽小海龜', en: 'Ancient Sea Turtle' }, icon: '🐢', baseScore: 20, color: '#51CF66', strugglePower: 2.2 },
+      { id: 'special_leader', name: { zh: '神奇歷德魚', en: 'Magic Lidl Fish' }, icon: '👑', baseScore: 100, color: '#339AF0', strugglePower: 2.8, isSpecialLeader: true }
+    ];
+
+    const QUALITIES = [
+      { nameZh: '普通', nameEn: 'Common', multiplier: 1.0, color: '#495057' },
+      { nameZh: '良好', nameEn: 'Good', multiplier: 1.15, color: '#2B8A3E' },
+      { nameZh: '珍稀', nameEn: 'Rare', multiplier: 1.3, color: '#1864AB' },
+      { nameZh: '傳說', nameEn: 'Legendary', multiplier: 1.8, color: '#D9480F' }
+    ];
+
+    const I18N = {
+      zh: {
+        score: 'PT 得分',
+        lines: '剩餘魚線',
+        cast: '拋竿',
+        reeling: '收線 !',
+        holding: '蓄力拋竿',
+        perfectCast: '🎯 完美拋竿！',
+        failedCast: '❌ 拋竿失敗！未命中指定範圍！',
+        fishOn: '💥 魚上鉤！快按收線！',
+        lineSnapped: '💥💥💥 睇住呀！魚釣線扯斷啦！ 💥💥💥',
+        fishEscaped: '💨💨💨 絛魚逃走咗啦！ 💨💨💨',
+        equipped: '已裝備',
+        equip: '裝備',
+        buy: '購買',
+        catches: '已捕獲',
+        gameOver: '魚線用盡！遊戲結束',
+        gameOverDesc: '最終累計得分:'
+      },
+      en: {
+        score: 'Score PT',
+        lines: 'Lines Left',
+        cast: 'CAST',
+        reeling: 'REELING!',
+        holding: 'CHARGING',
+        perfectCast: '🎯 PERFECT CAST!',
+        failedCast: '❌ CAST FAILED! Out of target zone!',
+        fishOn: '💥 FISH ON! Hold button to Reel!',
+        lineSnapped: '💥 LINE SNAPPED!',
+        fishEscaped: '💨 THE FISH ESCAPED!',
+        equipped: 'EQUIPPED',
+        equip: 'EQUIP',
+        buy: 'BUY',
+        catches: 'Caught',
+        gameOver: 'Out of Lines! Game Over',
+        gameOverDesc: 'Final Score:'
+      }
+    };
+
+    // Global Game State
+    let lang = 'zh';
+    let gameState = 'READY'; // READY, CHARGING, FISHING, FIGHTING, GAME_OVER
+    let score = 0;
+    let lines = 10;
+    
+    // Character selection state
+    let selectedChar = CHARACTERS[0];
+    let tempSelectedChar = CHARACTERS[0];
+    let isCharLocked = false;
+
+    // Shop gear states
+    let activeShopTab = 'rods'; // 'rods', 'outfits', 'hats'
+    let equippedRod = RODS[0];
+    let unlockedRods = ['rod_bamboo'];
+    let equippedOutfit = OUTFITS[0];
+    let unlockedOutfits = ['outfit_denim'];
+    let equippedHat = HATS[0];
+    let unlockedHats = ['hat_none'];
+
+    let fishLog = {};
+    let highScores = [
+      { name: '輕鬆誠', score: 999 },
+      { name: '郭富城', score: 777 },
+      { name: '章魚成', score: 100 }
+    ];
+
+    // Cast Charging Variables
+    let powerValue = 0;
+    let powerDirection = 1;
+    let powerSpeed = 2.4;
+    let powerInterval = null;
+    let targetZoneStart = 40;
+    let targetZoneWidth = 25;
+    let targetZoneEnd = 65;
+
+    // Reel-in Minigame Logic
+    let activeFish = null;
+    let activeQuality = null;
+    let currentDistance = 30.0;
+    let lineTension = 0;
+    let isReeling = false;
+
+    // Fish Struggle Visual Oscillations
+    let fishStruggleOffsetX = 0;
+    let fishStruggleOffsetY = 0;
+    let fishStruggleAngle = 0;
+
+    // Canvas & Graphics Variables
+    let canvas, ctx;
+    let rippleRings = [];
+    let waterSplashes = [];
+    let particles = [];
+    let timeCycleTimer = 0;
+    let timeOfDay = 'DAY';
+    let weatherType = 'SAKURA';
+
+    window.onload = function() {
+      canvas = document.getElementById('gameCanvas');
+      ctx = canvas.getContext('2d');
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      loadLocalStorageData();
+      initWeatherParticles();
+      renderInitialCharPicker();
+      updateActiveCharacterDisplay();
+      renderShopItems();
+      renderFishLog();
+      renderLeaderboard();
+      updateHUD();
+      updateActionButtonText();
+
+      // Show character selection modal if not locked yet
+      if (!isCharLocked) {
+        document.getElementById('charSelectModal').classList.remove('hidden');
+      } else {
+        document.getElementById('charSelectModal').classList.add('hidden');
+      }
+
+      bindEvents();
+
+      // Start Main Game Loop
+      requestAnimationFrame(gameLoop);
+    };
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     }
-];
-let selectedCharIndex = 0;
 
-// --- 魚類等級品質定義 ---
-const FISH_QUALITIES = [
-    { name: "一般", badge: "", diffMult: 1.2, scoreMult: 1.0, weight: 50 },
-    { name: "優良", badge: "★", diffMult: 1.5, scoreMult: 1.5, weight: 25 },
-    { name: "稀有", badge: "★★", diffMult: 1.9, scoreMult: 2.0, weight: 15 },
-    { name: "史詩", badge: "★★★", diffMult: 2.4, scoreMult: 3.0, weight: 8 },
-    { name: "傳說", badge: "👑", diffMult: 3.0, scoreMult: 5.0, weight: 2 }
-];
-
-// --- 遊戲狀態 ---
-let gameState = "SELECT_CHAR"; 
-let currentTab = "LOG"; 
-let lineTension = 0.0;
-let fishDistance = 50.0;
-let biteTimer = 0;
-let fightStartTime = 0;
-let currentFish = null;
-let currentFishQuality = null;
-let resultMsg = "";
-let scoreGainedMsg = "";
-let isPressing = false;
-let shopNotice = ""; 
-let noticeTimer = 0;
-
-// 魚線機制
-let remainingLines = 10;
-
-// 蓄力甩竿相關
-let castPower = 0.0;
-let powerDirection = 1;
-
-let totalScore = 0;
-let totalCatches = 0;
-
-// 特效粒子
-const sakuraPetals = Array.from({ length: 40 }, () => ({
-    x: Math.random() * 540,
-    y: Math.random() * 480,
-    speedY: 1 + Math.random() * 1.5,
-    speedX: 0.5 + Math.random() * 1,
-    size: 4 + Math.random() * 4,
-    rot: Math.random() * 360
-}));
-
-// --- 釣魚竿商店 ---
-const RODS = [
-    { id: "bamboo", name: "新仔二手竿", price: 0, reelSpeed: 0.8, tensionMult: 0.8, color: "#e9c46a", owned: true },
-    { id: "strawberry", name: "豐泰雜膠竿", price: 500, reelSpeed: 1.0, tensionMult: 0.65, color: "#ff85a2", owned: false },
-    { id: "catpaw", name: "升譜防火竿", price: 3000, reelSpeed: 1.3, tensionMult: 0.45, color: "#b8c0ff", owned: false },
-    { id: "sakura_god", name: "歷德大神竿", price: 9527, reelSpeed: 2.7, tensionMult: 0.20, color: "#ffd166", owned: false }
-];
-let equippedRodIndex = 0;
-
-// --- 魚種定義 ---
-const FISH_SPECIES = [
-    { id: "goldfish", name: "櫻花小金魚", color: "#ff758f", belly: "#fff0f5", difficulty: 0.6, size: 28, score: 100, count: 0, weight: 45, icon: "🐟", isSpecial: false },
-    { id: "dango", name: "三色團子魚", color: "#a8e6cf", belly: "#ffd3b6", difficulty: 0.95, size: 34, score: 220, count: 0, weight: 30, icon: "🍡", isSpecial: false },
-    { id: "takoyaki", name: "章魚燒小章魚", color: "#ff8b94", belly: "#ffaaa5", difficulty: 1.4, size: 38, score: 380, count: 0, weight: 18, icon: "🐙", isSpecial: false },
-    { id: "shiba", name: "柴犬水母", color: "#f0a868", belly: "#fff2df", difficulty: 1.9, size: 44, score: 600, count: 0, weight: 6, icon: "🐕", isSpecial: false },
-    { id: "koi_god", name: "錦鯉大檸樂", color: "#ff4757", belly: "#ffd700", difficulty: 2.8, size: 52, score: 2200, count: 0, weight: 1, isSpecial: true, icon: "✨" }
-];
-
-// 音效
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playSound(type, startFreq, endFreq, duration, vol=0.1) {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
-        if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + duration);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-    } catch(e) {}
-}
-
-function getRandomFish() {
-    const totalWeight = FISH_SPECIES.reduce((sum, f) => sum + f.weight, 0);
-    let rand = Math.random() * totalWeight;
-    for (let fish of FISH_SPECIES) {
-        if (rand < fish.weight) return fish;
-        rand -= fish.weight;
+    function updateHUD() {
+      document.getElementById('txtScore').innerText = score;
+      document.getElementById('txtLines').innerText = lines;
+      document.getElementById('lblScoreText').innerText = lang === 'zh' ? 'PT 得分:' : 'PT Score:';
+      document.getElementById('lblLinesText').innerText = lang === 'zh' ? '魚線:' : 'Lines:';
     }
-    return FISH_SPECIES[0];
-}
 
-function getRandomQuality() {
-    const totalWeight = FISH_QUALITIES.reduce((sum, q) => sum + q.weight, 0);
-    let rand = Math.random() * totalWeight;
-    for (let q of FISH_QUALITIES) {
-        if (rand < q.weight) return q;
-        rand -= q.weight;
+    function toggleLanguage() {
+      lang = lang === 'zh' ? 'en' : 'zh';
+      updateHUD();
+      renderShopItems();
+      renderFishLog();
+      renderInitialCharPicker();
+      updateActiveCharacterDisplay();
+      updateActionButtonText();
+      saveLocalStorageData();
+      showToast(lang === 'zh' ? '已切換為 繁體中文' : 'Switched to English');
     }
-    return FISH_QUALITIES[0];
-}
 
-function resetGame() {
-    remainingLines = 10;
-    gameState = "IDLE";
-    actionBtn.innerText = "拋竿 (CAST)";
-}
-
-// 操作處理
-function handlePressStart(e) {
-    if (e) e.preventDefault();
-    isPressing = true;
-    actionBtn.classList.add('active');
-
-    if (gameState === "SELECT_CHAR") {
-        playSound("sine", 600, 1000, 0.15, 0.2);
-        resetGame();
-        shopBtn.innerText = "圖鑑 »";
-    } else if (gameState === "GAME_OVER") {
-        playSound("sine", 600, 1000, 0.15, 0.2);
-        resetGame();
-    } else if (gameState === "IDLE") {
-        if (remainingLines <= 0) {
-            playSound("square", 200, 100, 0.2, 0.2);
-            shopNotice = "魚線用完了！請到 Lidl 商店購買！";
-            noticeTimer = Date.now() + 2000;
-            return;
-        }
-        gameState = "CHARGING";
-        castPower = 0.0;
-        powerDirection = 1;
-        actionBtn.innerText = "蓄力中...";
-        playSound("sine", 400, 700, 0.1, 0.1);
-    } else if (gameState === "RESULT") {
-        if (remainingLines <= 0) {
-            gameState = "GAME_OVER";
-            actionBtn.innerText = "重新開始";
-        } else {
-            gameState = "IDLE";
-            actionBtn.innerText = "拋竿 (CAST)";
-        }
+    function updateActionButtonText() {
+      const btnText = document.getElementById('txtMainAction');
+      if (gameState === 'READY') {
+        btnText.innerText = I18N[lang].cast;
+      } else if (gameState === 'CHARGING') {
+        btnText.innerText = I18N[lang].holding;
+      } else if (gameState === 'FISHING') {
+        btnText.innerText = lang === 'zh' ? '等魚上釣...' : 'Waiting...';
+      } else if (gameState === 'FIGHTING') {
+        btnText.innerText = I18N[lang].reeling;
+      }
     }
-}
 
-function handlePressEnd(e) {
-    if (e) e.preventDefault();
-    isPressing = false;
-    actionBtn.classList.remove('active');
-
-    if (gameState === "CHARGING") {
-        remainingLines--;
-        fishDistance = 25.0 + (castPower / 100.0) * 70.0;
-        playSound("sine", 400, 900, 0.2, 0.2);
-        gameState = "WAITING";
-        biteTimer = Date.now() + (1800 + Math.random() * 2000);
-        actionBtn.innerText = "等待中...";
+    function renderInitialCharPicker() {
+      const container = document.getElementById('charSelectGrid');
+      if (!container) return;
+      container.innerHTML = CHARACTERS.map(c => `
+        <button onclick="highlightInitialCharacter('${c.id}')" class="p-3 rounded-2xl border-4 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer ${tempSelectedChar.id === c.id ? 'border-rose-500 bg-amber-200/90 font-black shadow-lg scale-105' : 'border-amber-300 bg-white/70 hover:bg-amber-100'}">
+          <span class="text-3xl sm:text-4xl">${c.avatar}</span>
+          <span class="text-xs sm:text-sm font-black text-amber-950">${c.name.split(' ')[0]}</span>
+          <span class="text-[10px] text-rose-700 font-extrabold leading-tight">${c.bonusText}</span>
+        </button>
+      `).join('');
     }
-}
 
-window.addEventListener('keydown', (e) => { 
-    if (e.code === 'Space' && !e.repeat) handlePressStart(); 
-    if (gameState === "SELECT_CHAR") {
-        if (e.code === 'ArrowRight') { selectedCharIndex = (selectedCharIndex + 1) % CHARACTERS.length; playSound("sine", 600, 700, 0.08, 0.15); }
-        if (e.code === 'ArrowLeft') { selectedCharIndex = (selectedCharIndex - 1 + CHARACTERS.length) % CHARACTERS.length; playSound("sine", 600, 700, 0.08, 0.15); }
+    function highlightInitialCharacter(id) {
+      tempSelectedChar = CHARACTERS.find(c => c.id === id) || CHARACTERS[0];
+      renderInitialCharPicker();
     }
-});
-window.addEventListener('keyup', (e) => { if (e.code === 'Space') handlePressEnd(); });
 
-actionBtn.addEventListener('touchstart', handlePressStart, {passive: false});
-actionBtn.addEventListener('touchend', handlePressEnd, {passive: false});
-actionBtn.addEventListener('mousedown', handlePressStart);
-actionBtn.addEventListener('mouseup', handlePressEnd);
-
-shopBtn.addEventListener('click', () => {
-    if (gameState === "SELECT_CHAR") {
-        selectedCharIndex = (selectedCharIndex + 1) % CHARACTERS.length;
-        playSound("sine", 600, 800, 0.1, 0.2);
-    } else {
-        currentTab = (currentTab === "LOG") ? "SHOP" : "LOG";
-        shopBtn.innerText = currentTab === "LOG" ? "商店 »" : "圖鑑 »";
-        playSound("sine", 700, 950, 0.1, 0.2);
+    function confirmInitialCharacter() {
+      selectedChar = tempSelectedChar;
+      isCharLocked = true;
+      document.getElementById('charSelectModal').classList.add('hidden');
+      updateActiveCharacterDisplay();
+      saveLocalStorageData();
+      showToast(lang === 'zh' ? `已選擇 ${selectedChar.name}！祝好運！` : `Selected ${selectedChar.name}!`);
     }
-});
 
-// 畫布點擊 (經縮放轉換的精確座標計算)
-canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const clickX = (e.clientX - rect.left) * scaleX;
-    const clickY = (e.clientY - rect.top) * scaleY;
+    function updateActiveCharacterDisplay() {
+      const avatarElem = document.getElementById('activeCharAvatar');
+      const nameElem = document.getElementById('activeCharName');
+      const perkElem = document.getElementById('activeCharPerk');
 
-    if (gameState === "SELECT_CHAR") {
-        CHARACTERS.forEach((c, idx) => {
-            const cardX = 50 + idx * 210;
-            const cardY = 110;
-            if (clickX >= cardX && clickX <= cardX + 190 && clickY >= cardY && clickY <= cardY + 250) {
-                selectedCharIndex = idx;
-                playSound("sine", 800, 1000, 0.1, 0.2);
-            }
-        });
+      if (avatarElem) avatarElem.innerText = selectedChar.avatar;
+      if (nameElem) nameElem.innerText = selectedChar.name;
+      if (perkElem) perkElem.innerText = selectedChar.bonusText;
+    }
+
+    function startChargingCast() {
+      if (!isCharLocked) {
+        document.getElementById('charSelectModal').classList.remove('hidden');
         return;
+      }
+      if (lines <= 0) {
+        showToast(lang === 'zh' ? '魚線用盡！請在 Lidl 商店補充。' : 'No lines left! Restock in Lidl shop.');
+        return;
+      }
+
+      gameState = 'CHARGING';
+      powerValue = 0;
+      powerDirection = 1;
+
+      // Random target range (20%-35% width, starting between 25%-65%)
+      targetZoneWidth = 20 + Math.floor(Math.random() * 15);
+      targetZoneStart = 25 + Math.floor(Math.random() * 40);
+      targetZoneEnd = targetZoneStart + targetZoneWidth;
+
+      const targetZoneElem = document.getElementById('targetZone');
+      if (targetZoneElem) {
+        targetZoneElem.style.left = `${targetZoneStart}%`;
+        targetZoneElem.style.width = `${targetZoneWidth}%`;
+      }
+
+      document.getElementById('targetRangeText').innerText = `${lang === 'zh' ? '目標' : 'Target'}: ${targetZoneStart}% - ${targetZoneEnd}%`;
+      document.getElementById('castContainer').classList.remove('hidden');
+      document.getElementById('meterPointer').classList.remove('hidden');
+
+      updateActionButtonText();
+
+      clearInterval(powerInterval);
+      powerInterval = setInterval(() => {
+        powerValue += powerDirection * powerSpeed;
+        if (powerValue >= 100) {
+          powerValue = 100;
+          powerDirection = -1;
+        } else if (powerValue <= 0) {
+          powerValue = 0;
+          powerDirection = 1;
+        }
+
+        const pBar = document.getElementById('powerBar');
+        const pPercent = document.getElementById('powerPercent');
+        const pointer = document.getElementById('meterPointer');
+
+        if (pBar) pBar.style.width = `${powerValue}%`;
+        if (pPercent) pPercent.innerText = `${Math.floor(powerValue)}%`;
+        if (pointer) pointer.style.left = `${powerValue}%`;
+      }, 20);
     }
 
-    if (currentTab === "SHOP") {
-        const px = 530;
+    function releaseCast() {
+      if (gameState !== 'CHARGING') return;
 
-        // 1. 釣竿選擇
-        RODS.forEach((rod, index) => {
-            const yOff = 120 + index * 62;
-            const btnX = px + 24, btnY = yOff + 22, btnW = 140, btnH = 22;
+      clearInterval(powerInterval);
+      document.getElementById('castContainer').classList.add('hidden');
 
-            if (clickX >= btnX && clickX <= btnX + btnW && clickY >= btnY && clickY <= btnY + btnH) {
-                if (!rod.owned) {
-                    if (totalScore >= rod.price) {
-                        totalScore -= rod.price;
-                        rod.owned = true;
-                        equippedRodIndex = index;
-                        playSound("sine", 500, 1200, 0.3, 0.3);
-                        shopNotice = "已購買並裝備！";
-                        noticeTimer = Date.now() + 1500;
-                    } else {
-                        playSound("square", 200, 100, 0.2, 0.2);
-                        shopNotice = "點數不足！";
-                        noticeTimer = Date.now() + 1500;
-                    }
-                } else {
-                    equippedRodIndex = index;
-                    playSound("sine", 800, 1000, 0.1, 0.2);
-                    shopNotice = "已成功裝備！";
-                    noticeTimer = Date.now() + 1500;
-                }
-            }
-        });
+      const isSuccess = powerValue >= targetZoneStart && powerValue <= targetZoneEnd;
 
-        // 2. 魚線購買區
-        const lineShopY = 370;
-        if (clickX >= px + 15 && clickX <= px + 90 && clickY >= lineShopY + 25 && clickY <= lineShopY + 50) {
-            if (totalScore >= 100) {
-                totalScore -= 100;
-                remainingLines += 1;
-                playSound("sine", 600, 1100, 0.2, 0.25);
-                shopNotice = "已購買 1 條魚線！";
-                noticeTimer = Date.now() + 1500;
-            } else {
-                playSound("square", 200, 100, 0.2, 0.2);
-                shopNotice = "點數不足！";
-                noticeTimer = Date.now() + 1500;
-            }
+      lines--;
+      updateHUD();
+
+      if (isSuccess) {
+        showToast(I18N[lang].perfectCast);
+        currentDistance = 18.0 + (powerValue / 100.0) * 17.0;
+        createSplashParticles(canvas.width * (0.36 + (powerValue / 100.0) * 0.46), canvas.height * 0.65, 12);
+        gameState = 'FISHING';
+        updateActionButtonText();
+
+        setTimeout(() => {
+          if (gameState === 'FISHING') {
+            triggerFishBite();
+          }
+        }, 1500 + Math.random() * 2000);
+      } else {
+        showToast(I18N[lang].failedCast);
+        gameState = 'READY';
+        updateActionButtonText();
+
+        if (lines <= 0) {
+          setTimeout(triggerGameOver, 1000);
         }
-        if (clickX >= px + 100 && clickX <= px + 175 && clickY >= lineShopY + 25 && clickY <= lineShopY + 50) {
-            if (totalScore >= 400) {
-                totalScore -= 400;
-                remainingLines += 5;
-                playSound("sine", 600, 1200, 0.3, 0.3);
-                shopNotice = "已購買 5 條魚線！";
-                noticeTimer = Date.now() + 1500;
-            } else {
-                playSound("square", 200, 100, 0.2, 0.2);
-                shopNotice = "點數不足！";
-                noticeTimer = Date.now() + 1500;
-            }
-        }
+      }
     }
-});
 
-function drawKawaiiBackground(now) {
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, 210);
-    skyGrad.addColorStop(0, "#ffdde1");
-    skyGrad.addColorStop(1, "#ee9ca7");
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(0, 0, 530, 210);
+    function triggerFishBite() {
+      gameState = 'FIGHTING';
+      lineTension = 15;
 
-    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(440, 55, 28, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#fffae6"; ctx.beginPath(); ctx.arc(440, 55, 22, 0, Math.PI * 2); ctx.fill();
+      const roll = Math.random();
+      if (roll < 0.02) {
+        activeFish = FISH_SPECIES.find(f => f.isSpecialLeader);
+      } else {
+        const regularList = FISH_SPECIES.filter(f => !f.isSpecialLeader);
+        activeFish = regularList[Math.floor(Math.random() * regularList.length)];
+      }
 
-    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-    ctx.beginPath();
-    ctx.arc(100, 70, 18, 0, Math.PI * 2);
-    ctx.arc(120, 60, 24, 0, Math.PI * 2);
-    ctx.arc(145, 70, 18, 0, Math.PI * 2);
-    ctx.fill();
+      const qRoll = Math.random();
+      if (qRoll < 0.5) activeQuality = QUALITIES[0];
+      else if (qRoll < 0.8) activeQuality = QUALITIES[1];
+      else if (qRoll < 0.95) activeQuality = QUALITIES[2];
+      else activeQuality = QUALITIES[3];
 
-    ctx.fillStyle = "#b5e2fa";
-    ctx.beginPath();
-    ctx.moveTo(0, 210);
-    ctx.quadraticCurveTo(130, 160, 260, 210);
-    ctx.quadraticCurveTo(390, 170, 530, 210);
-    ctx.fill();
+      document.getElementById('tensionGaugeContainer').classList.remove('hidden');
+      showToast(I18N[lang].fishOn);
+      updateActionButtonText();
+    }
 
-    const seaGrad = ctx.createLinearGradient(0, 210, 0, 480);
-    seaGrad.addColorStop(0, "#70d6ff");
-    seaGrad.addColorStop(1, "#ff70a6");
-    ctx.fillStyle = seaGrad;
-    ctx.fillRect(0, 210, 530, 270);
+    function updateFishingLogic() {
+      if (gameState === 'FIGHTING' && activeFish) {
+        const fishStrugglePower = activeFish.strugglePower;
+        const rodMod = equippedRod.tensionReduction;
+        const charMod = selectedChar.id === 'florian' ? 0.80 : 1.0;
 
-    ctx.fillStyle = "#a8e6cf";
-    ctx.beginPath(); ctx.roundRect(0, 180, 140, 45, [0, 15, 15, 0]); ctx.fill();
-    ctx.fillStyle = "#ffaaa5"; ctx.fillRect(0, 195, 120, 12);
+        fishStruggleAngle += 0.15 * fishStrugglePower;
+        fishStruggleOffsetX = Math.sin(fishStruggleAngle) * (10 + fishStrugglePower * 5);
+        fishStruggleOffsetY = Math.cos(fishStruggleAngle * 0.8) * 4;
 
-    ctx.fillStyle = "#ffb3c1";
-    sakuraPetals.forEach(p => {
-        p.y += p.speedY; p.x += Math.sin(now * 0.002) * p.speedX;
-        if (p.y > 480) { p.y = -10; p.x = Math.random() * 530; }
+        if (Math.random() < 0.3) {
+          const dockEdgeX = canvas.width * 0.36;
+          const farWaterX = canvas.width * 0.82;
+          const distRatio = Math.min(1, Math.max(0, currentDistance / 35.0));
+          const currentX = dockEdgeX + (farWaterX - dockEdgeX) * distRatio;
+          const floatX = currentX + fishStruggleOffsetX;
+          const floatY = canvas.height * 0.67 - (distRatio * 12) + fishStruggleOffsetY;
+          createSplashParticles(floatX, floatY, 2);
+          rippleRings.push({ x: floatX, y: floatY, radius: 2, maxRadius: 20 + Math.random() * 15, alpha: 0.8 });
+        }
+
+        if (isReeling) {
+          const reelSpeedMod = equippedRod.reelSpeed * (selectedChar.id === 'pascal' ? 1.15 : 1.0);
+          currentDistance -= reelSpeedMod * 0.25;
+          lineTension += (0.65 * fishStrugglePower * rodMod * charMod);
+        } else {
+          lineTension -= 0.55;
+          currentDistance += 0.12 * fishStrugglePower;
+        }
+
+        currentDistance = Math.max(0, currentDistance);
+        lineTension = Math.max(0, lineTension);
+
+        const tensionBar = document.getElementById('tensionBarInner');
+        if (tensionBar) tensionBar.style.width = `${Math.min(100, lineTension)}%`;
+        
+        const distLabel = document.getElementById('uiDistanceLabel');
+        if (distLabel) distLabel.innerText = `${Math.max(0, currentDistance).toFixed(1)}m`;
+
+        const warningElem = document.getElementById('tensionWarning');
+        if (lineTension > 75) {
+          warningElem.innerText = lang === 'zh' ? '⚠️ 警告！拉力過高，快鬆開按鈕！' : '⚠️ DANGER! RELEASE BUTTON!';
+          warningElem.classList.remove('hidden');
+        } else if (currentDistance > 33.0) {
+          warningElem.innerText = lang === 'zh' ? '⚠️ 警告！魚兒快游走了，快按住收線！' : '⚠️ WARNING! FISH IS SWIMMING AWAY!';
+          warningElem.classList.remove('hidden');
+        } else {
+          warningElem.classList.add('hidden');
+        }
+
+        if (lineTension >= 100) {
+          fishEscaped(I18N[lang].lineSnapped);
+        } else if (currentDistance >= 38.0) {
+          fishEscaped(I18N[lang].fishEscaped);
+        } else if (currentDistance <= 0) {
+          fishCaughtSuccess();
+        }
+      }
+    }
+
+    function fishEscaped(reason) {
+      gameState = 'READY';
+      document.getElementById('tensionGaugeContainer').classList.add('hidden');
+      document.getElementById('tensionWarning').classList.add('hidden');
+      isReeling = false;
+
+      showToast(reason);
+      updateActionButtonText();
+
+      if (lines <= 0) {
+        setTimeout(triggerGameOver, 1000);
+      }
+    }
+
+    function fishCaughtSuccess() {
+      gameState = 'READY';
+      document.getElementById('tensionGaugeContainer').classList.add('hidden');
+      document.getElementById('tensionWarning').classList.add('hidden');
+      isReeling = false;
+
+      lines++;
+
+      const charMultiplier = selectedChar.id === 'kern' ? 1.10 : 1.0;
+      const earnedScore = Math.round(activeFish.baseScore * activeQuality.multiplier * charMultiplier);
+      score += earnedScore;
+
+      fishLog[activeFish.id] = (fishLog[activeFish.id] || 0) + 1;
+
+      updateHUD();
+      saveLocalStorageData();
+      updateActionButtonText();
+
+      showResultModal(true, earnedScore);
+    }
+
+    function triggerGameOver() {
+      gameState = 'GAME_OVER';
+      highScores.push({ name: selectedChar.name.split(' ')[0], score: score });
+      highScores.sort((a, b) => b.score - a.score);
+      highScores = highScores.slice(0, 5);
+      
+      // Allow character re-selection on new game session after game over
+      isCharLocked = false;
+      saveLocalStorageData();
+
+      showResultModal(false, score);
+    }
+
+    function gameLoop() {
+      updateFishingLogic();
+      updateEnvironmentAndParticles();
+      renderCanvas();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function renderCanvas() {
+      if (!ctx || !canvas) return;
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // 1. Sky Gradient
+      const skyGradient = ctx.createLinearGradient(0, 0, 0, h * 0.55);
+      if (timeOfDay === 'DAY') {
+        skyGradient.addColorStop(0, '#A2E8DD');
+        skyGradient.addColorStop(1, '#FFE4E1');
+      } else {
+        skyGradient.addColorStop(0, '#1A252F');
+        skyGradient.addColorStop(1, '#34495E');
+      }
+      ctx.fillStyle = skyGradient;
+      ctx.fillRect(0, 0, w, h);
+
+      // Sun / Moon
+      ctx.beginPath();
+      ctx.arc(w * 0.85, h * 0.18, 26, 0, Math.PI * 2);
+      ctx.fillStyle = timeOfDay === 'DAY' ? '#FFD43B' : '#F1C40F';
+      ctx.shadowColor = timeOfDay === 'DAY' ? '#FFE066' : '#F39C12';
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // 2. Kawaii Ocean Surface & Waves
+      const seaGradient = ctx.createLinearGradient(0, h * 0.55, 0, h);
+      seaGradient.addColorStop(0, '#4EAEFF');
+      seaGradient.addColorStop(0.4, '#1C7ED6');
+      seaGradient.addColorStop(1, '#0B3061');
+      ctx.fillStyle = seaGradient;
+      ctx.fillRect(0, h * 0.55, w, h * 0.45);
+
+      // Waves Animation
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.beginPath();
+      const waveOffset = Date.now() * 0.003;
+      for (let x = 0; x <= w; x += 20) {
+        const y = h * 0.55 + Math.sin(x * 0.015 + waveOffset) * 5;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // 3. Render Pier & Chibi Character
+      drawDockAndCharacter(w, h);
+
+      // 4. Render Weather Particles
+      drawWeatherParticles();
+
+      // 5. Render Fishing Line, Bobber & WATER FISH STRUGGLE
+      drawFishingLineAndStruggle(w, h);
+
+      // 6. Water Splash Droplets
+      drawWaterSplashes();
+    }
+
+    function drawDockAndCharacter(w, h) {
+      const dockWidth = w * 0.32;
+      const dockY = h * 0.58;
+
+      // Pier Wood Structure
+      ctx.fillStyle = '#8B5A2B';
+      ctx.fillRect(0, dockY, dockWidth, h - dockY);
+      ctx.fillStyle = '#A67C52';
+      ctx.fillRect(0, dockY, dockWidth, 8);
+
+      ctx.fillStyle = '#5C3A1E';
+      ctx.fillRect(dockWidth * 0.3, dockY, 14, h - dockY);
+      ctx.fillRect(dockWidth * 0.7, dockY, 14, h - dockY);
+
+      // Chibi Character
+      const charX = dockWidth * 0.55;
+      const charY = dockY - 10;
+      
+      ctx.save();
+      ctx.translate(charX, charY);
+
+      if (gameState === 'FIGHTING') {
+        ctx.translate(0, Math.sin(Date.now() * 0.01) * 3);
+      }
+
+      // Draw Fisherman Body / Outfit Clothes
+      ctx.fillStyle = equippedOutfit.color;
+      ctx.beginPath();
+      ctx.roundRect(-12, -10, 24, 16, 6);
+      ctx.fill();
+
+      // Draw Character Head
+      ctx.fillStyle = selectedChar.color;
+      ctx.beginPath();
+      ctx.arc(0, -22, 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Face
+      ctx.fillStyle = '#333';
+      ctx.beginPath();
+      ctx.arc(-6, -24, 2.5, 0, Math.PI * 2);
+      ctx.arc(6, -24, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Blush
+      ctx.fillStyle = '#FF8787';
+      ctx.beginPath();
+      ctx.arc(-10, -19, 3, 0, Math.PI * 2);
+      ctx.arc(10, -19, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ears
+      if (selectedChar.id === 'pascal') {
+        ctx.fillStyle = selectedChar.color;
         ctx.beginPath();
-        ctx.ellipse(p.x, p.y, p.size, p.size / 2, p.rot, 0, Math.PI * 2);
+        ctx.moveTo(-16, -32); ctx.lineTo(-8, -42); ctx.lineTo(-2, -34); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(16, -32); ctx.lineTo(8, -42); ctx.lineTo(2, -34); ctx.fill();
+      } else if (selectedChar.id === 'florian') {
+        ctx.fillStyle = '#FFF';
+        ctx.beginPath();
+        ctx.ellipse(-8, -44, 4, 12, -0.1, 0, Math.PI * 2);
+        ctx.ellipse(8, -44, 4, 12, 0.1, 0, Math.PI * 2);
         ctx.fill();
-    });
-}
+      }
 
-function drawKawaiiFisherman(x, y, charData) {
-    const c = charData || CHARACTERS[selectedCharIndex];
-    let bounceY = (gameState === "RESULT" && resultMsg.includes("成功")) ? Math.abs(Math.sin(Date.now() * 0.015)) * -14 : 0;
-    const curY = y + bounceY;
+      // Draw Custom Hat
+      drawCharacterHat(ctx, equippedHat);
 
-    ctx.fillStyle = c.shirtColor; ctx.beginPath(); ctx.roundRect(x + 2, curY + 22, 22, 20, 8); ctx.fill();
-    ctx.fillStyle = c.pantsColor; ctx.fillRect(x + 5, curY + 40, 6, 10); ctx.fillRect(x + 15, curY + 40, 6, 10);
-    ctx.fillStyle = c.skinColor; ctx.beginPath(); ctx.arc(x + 13, curY + 12, 18, 0, Math.PI * 2); ctx.fill();
+      // Rod
+      ctx.strokeStyle = equippedRod.color;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(5, -15);
+      ctx.lineTo(40, -50);
+      ctx.stroke();
 
-    ctx.fillStyle = c.blush;
-    ctx.beginPath(); ctx.arc(x + 4, curY + 16, 4, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 22, curY + 16, 4, 0, Math.PI * 2); ctx.fill();
-
-    ctx.fillStyle = "#2b2d42";
-    ctx.beginPath(); ctx.arc(x + 7, curY + 12, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 19, curY + 12, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#fff";
-    ctx.beginPath(); ctx.arc(x + 6, curY + 11, 1, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 18, curY + 11, 1, 0, Math.PI * 2); ctx.fill();
-
-    ctx.fillStyle = c.hatColor; ctx.beginPath(); ctx.arc(x + 13, curY + 2, 18, Math.PI, 0); ctx.fill();
-    ctx.fillStyle = c.hatBrim; ctx.beginPath(); ctx.roundRect(x - 8, curY, 42, 6, 3); ctx.fill();
-
-    const currentRod = RODS[equippedRodIndex];
-    ctx.strokeStyle = currentRod.color;
-    ctx.lineWidth = 4;
-    ctx.lineCap = "round";
-
-    if (gameState === "CHARGING") {
-        ctx.beginPath(); ctx.moveTo(x + 5, curY + 25); ctx.lineTo(x - 30, curY - 10); ctx.stroke();
-    } else {
-        ctx.beginPath(); ctx.moveTo(x + 18, curY + 25); ctx.lineTo(x + 65, curY - 20); ctx.stroke();
+      ctx.restore();
     }
-}
 
-function drawKawaiiFish(x, y, fish, scale=1.0) {
-    const s = fish.size * scale;
-    ctx.fillStyle = fish.color;
-    ctx.beginPath(); ctx.ellipse(x, y, s/1.8, s/2.4, 0, 0, Math.PI * 2); ctx.fill();
+    function drawCharacterHat(ctx, hat) {
+      if (!hat || hat.type === 'none') return;
 
-    ctx.fillStyle = fish.belly;
-    ctx.beginPath(); ctx.ellipse(x, y + s/6, s/2.2, s/5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.save();
+      ctx.fillStyle = hat.color;
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1.5;
 
-    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(x - s/3, y - s/8, Math.max(3, 5 * scale), 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#222"; ctx.beginPath(); ctx.arc(x - s/3 - 1, y - s/8, Math.max(1.5, 2.5 * scale), 0, Math.PI * 2); ctx.fill();
-
-    ctx.fillStyle = "#ff758f"; ctx.beginPath(); ctx.arc(x - s/4, y + s/10, Math.max(2, 3 * scale), 0, Math.PI * 2); ctx.fill();
-
-    const tailAngle = Math.sin(Date.now() * 0.015) * 8 * scale;
-    ctx.fillStyle = fish.color;
-    ctx.beginPath();
-    ctx.moveTo(x + s/2, y);
-    ctx.lineTo(x + s/2 + 12 * scale, y - 8 * scale + tailAngle);
-    ctx.lineTo(x + s/2 + 12 * scale, y + 8 * scale + tailAngle);
-    ctx.fill();
-}
-
-function drawCharacterSelectScreen() {
-    ctx.fillStyle = "#fff5f6";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ff4d6d";
-    ctx.font = "bold 26px 'Quicksand', sans-serif";
-    ctx.fillText("✨ 選擇你的釣魚角色 ✨", canvas.width / 2, 55);
-
-    CHARACTERS.forEach((char, idx) => {
-        const cardX = 50 + idx * 210, cardY = 110, cardW = 190, cardH = 250;
-        const isSelected = (idx === selectedCharIndex);
-
-        ctx.fillStyle = isSelected ? "#ffffff" : "#fff0f3";
-        ctx.beginPath(); ctx.roundRect(cardX, cardY, cardW, cardH, 20); ctx.fill();
-
-        ctx.strokeStyle = isSelected ? "#ff758f" : "#ffccd5";
-        ctx.lineWidth = isSelected ? 4 : 2;
+      if (hat.type === 'straw') {
+        // Wide Straw Sunhat
+        ctx.beginPath();
+        ctx.ellipse(0, -36, 26, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = isSelected ? "#ffe5ec" : "#f8edeb";
-        ctx.beginPath(); ctx.arc(cardX + cardW/2, cardY + 80, 45, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, -40, 14, Math.PI, 0);
+        ctx.fill();
+        ctx.stroke();
+      } else if (hat.type === 'bucket') {
+        // Fisherman Bucket Hat
+        ctx.beginPath();
+        ctx.ellipse(0, -35, 22, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
 
-        drawKawaiiFisherman(cardX + cardW / 2 - 13, cardY + 45, char);
+        ctx.beginPath();
+        ctx.rect(-13, -46, 26, 12);
+        ctx.fill();
+        ctx.stroke();
+      } else if (hat.type === 'cap') {
+        // Baseball Cap
+        ctx.beginPath();
+        ctx.arc(0, -36, 17, Math.PI * 0.9, Math.PI * 2.1);
+        ctx.fill();
+        ctx.stroke();
 
-        ctx.fillStyle = isSelected ? "#ff4d6d" : "#590d22";
-        ctx.font = "bold 16px '微軟正黑體', sans-serif";
-        ctx.fillText(char.name, cardX + cardW / 2, cardY + 160);
+        // Visor
+        ctx.beginPath();
+        ctx.ellipse(12, -34, 12, 4, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else if (hat.type === 'crown') {
+        // Golden Crown
+        ctx.fillStyle = hat.color;
+        ctx.beginPath();
+        ctx.moveTo(-15, -36);
+        ctx.lineTo(-15, -48);
+        ctx.lineTo(-7, -40);
+        ctx.lineTo(0, -52);
+        ctx.lineTo(7, -40);
+        ctx.lineTo(15, -48);
+        ctx.lineTo(15, -36);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
 
-        ctx.fillStyle = "#8d99ae";
-        ctx.font = "bold 12px '微軟正黑體', sans-serif";
-        ctx.fillText(char.desc, cardX + cardW / 2, cardY + 190);
+        // Crown Jewels
+        ctx.fillStyle = '#EF4444';
+        ctx.beginPath();
+        ctx.arc(0, -42, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-        if (isSelected) {
-            ctx.fillStyle = "#ff758f";
-            ctx.font = "bold 14px sans-serif";
-            ctx.fillText("★ 已選擇 ★", cardX + cardW / 2, cardY + 225);
+      ctx.restore();
+    }
+
+    function drawFishingLineAndStruggle(w, h) {
+      const rodTipX = (w * 0.32 * 0.55) + 40;
+      const rodTipY = (h * 0.58 - 10) - 50;
+
+      const dockEdgeX = w * 0.36;
+      const farWaterX = w * 0.82;
+      const distRatio = Math.min(1, Math.max(0, currentDistance / 35.0));
+      
+      let floatX = dockEdgeX + (farWaterX - dockEdgeX) * distRatio;
+      let floatY = h * 0.67 - (distRatio * 12);
+
+      if (gameState === 'FIGHTING') {
+        floatX += fishStruggleOffsetX;
+        floatY += fishStruggleOffsetY;
+      }
+
+      if (gameState === 'FISHING' || gameState === 'FIGHTING') {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(rodTipX, rodTipY);
+        const controlX = (rodTipX + floatX) / 2;
+        const controlY = Math.min(rodTipY, floatY) + (lineTension > 60 ? 10 : 35);
+        ctx.quadraticCurveTo(controlX, controlY, floatX, floatY);
+        ctx.stroke();
+
+        drawWaterRipples(ctx);
+
+        ctx.beginPath();
+        ctx.arc(floatX, floatY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#E03131';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(floatX, floatY + 2.5, 5, 0, Math.PI);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+
+        if (gameState === 'FIGHTING' && activeFish) {
+          ctx.save();
+          ctx.translate(floatX, floatY + 16);
+          ctx.rotate(Math.sin(fishStruggleAngle) * 0.35);
+
+          const scale = 0.8;
+          ctx.scale(scale, scale);
+
+          if (activeFish.isSpecialLeader) {
+            ctx.fillStyle = '#339AF0';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 20, 11, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#FFD43B';
+            ctx.fillRect(-9, -9, 4, 18);
+            ctx.fillRect(3, -9, 4, 18);
+
+            ctx.fillStyle = '#E03131';
+            ctx.beginPath();
+            ctx.arc(-2, 0, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#339AF0';
+            ctx.beginPath();
+            ctx.moveTo(18, 0); ctx.lineTo(26, -8); ctx.lineTo(26, 8); ctx.fill();
+          } else {
+            ctx.fillStyle = activeFish.color;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 18, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(16, 0); ctx.lineTo(24, -8); ctx.lineTo(24, 8); ctx.fill();
+
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath();
+            ctx.arc(-9, -2.5, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(-10, -2.5, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
         }
-    });
+      }
+    }
 
-    ctx.fillStyle = "#c9184a";
-    ctx.font = "bold 14px sans-serif";
-    ctx.fillText("按「決定!」按鈕開始遊戲", canvas.width / 2, 415);
-    ctx.textAlign = "left";
-}
+    function drawWaterRipples(ctx) {
+      for (let i = rippleRings.length - 1; i >= 0; i--) {
+        const ring = rippleRings[i];
+        ring.radius += 0.7;
+        ring.alpha -= 0.02;
 
-function drawSidebar() {
-    const px = 530, py = 0, pw = 190, ph = 480;
-    ctx.fillStyle = "#fff0f3"; ctx.fillRect(px, py, pw, ph);
-    ctx.strokeStyle = "#ffccd5"; ctx.lineWidth = 3; ctx.strokeRect(px, py, pw, ph);
+        if (ring.alpha <= 0 || ring.radius >= ring.maxRadius) {
+          rippleRings.splice(i, 1);
+          continue;
+        }
 
-    ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 14px sans-serif";
-    ctx.fillText("🎀 冒險統計", px + 45, py + 25);
-    ctx.fillStyle = "#590d22"; ctx.font = "bold 12px sans-serif";
-    ctx.fillText(`總獲得點數: ${totalScore} pt`, px + 15, py + 46);
-    ctx.fillText(`成功釣起數: ${totalCatches} 尾`, px + 15, py + 64);
-    
-    ctx.fillStyle = remainingLines <= 2 ? "#e63946" : "#0077b6";
-    ctx.font = "bold 13px sans-serif";
-    ctx.fillText(`🧶 剩餘魚線: ${remainingLines} 條`, px + 15, py + 84);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${ring.alpha})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(ring.x, ring.y, ring.radius, ring.radius * 0.4, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
 
-    ctx.strokeStyle = "#ffb3c1"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(px + 15, py + 94); ctx.lineTo(px + 175, py + 94); ctx.stroke();
-
-    if (currentTab === "LOG") {
-        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 14px sans-serif";
-        ctx.fillText("📖 魚類圖鑑", px + 45, py + 112);
-
-        FISH_SPECIES.forEach((fish, i) => {
-            const yOff = py + 120 + i * 68;
-            drawKawaiiFish(px + 30, yOff + 20, fish, 0.5);
-            ctx.fillStyle = fish.isSpecial ? "#ff0054" : "#590d22";
-            ctx.font = "bold 11px sans-serif";
-            ctx.fillText(`${fish.icon} ${fish.name}`, px + 52, yOff + 16);
-            ctx.fillStyle = fish.count > 0 ? "#2a9d8f" : "#8d99ae";
-            ctx.fillText(`已捕捉: ${fish.count} (+${fish.score}pt)`, px + 52, yOff + 32);
+    function createSplashParticles(x, y, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.5 + Math.random() * 3.5;
+        waterSplashes.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 2.0,
+          radius: 2 + Math.random() * 2.5,
+          alpha: 1.0,
+          color: Math.random() > 0.3 ? '#A5D8FF' : '#FFFFFF'
         });
-    } else {
-        ctx.fillStyle = "#0077b6"; ctx.font = "bold 14px sans-serif";
-        ctx.fillText("🛒 Lidl Shop", px + 28, py + 112);
+      }
+    }
 
-        RODS.forEach((rod, index) => {
-            const yOff = py + 120 + index * 62;
-            ctx.fillStyle = rod.color;
-            ctx.beginPath(); ctx.roundRect(px + 12, yOff + 5, 6, 40, 3); ctx.fill();
+    function drawWaterSplashes() {
+      for (let i = waterSplashes.length - 1; i >= 0; i--) {
+        const p = waterSplashes[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.2;
+        p.alpha -= 0.03;
 
-            ctx.fillStyle = "#03045e"; ctx.font = "bold 11px sans-serif";
-            ctx.fillText(rod.name, px + 24, yOff + 16);
+        if (p.alpha <= 0) {
+          waterSplashes.splice(i, 1);
+          continue;
+        }
 
-            const btnX = px + 24, btnY = yOff + 22, btnW = 140, btnH = 22;
-            const isEquipped = equippedRodIndex === index;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      }
+    }
 
-            if (isEquipped) {
-                ctx.fillStyle = "#06d6a0"; ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 11); ctx.fill();
-                ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
-                ctx.fillText("使用中 ★", btnX + 42, btnY + 15);
-            } else if (rod.owned) {
-                ctx.fillStyle = "#118ab2"; ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 11); ctx.fill();
-                ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
-                ctx.fillText("裝備釣竿", btnX + 45, btnY + 15);
-            } else {
-                ctx.fillStyle = totalScore >= rod.price ? "#ffd166" : "#cbd5e1";
-                ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 11); ctx.fill();
-                ctx.fillStyle = "#590d22"; ctx.font = "bold 10px sans-serif";
-                ctx.fillText(`購買 (${rod.price}pt)`, btnX + 25, btnY + 15);
-            }
+    function initWeatherParticles() {
+      particles = [];
+      for (let i = 0; i < 30; i++) {
+        particles.push({
+          x: Math.random() * 800,
+          y: Math.random() * 600,
+          size: 3 + Math.random() * 4,
+          speedX: -1 + Math.random() * 2,
+          speedY: 1 + Math.random() * 2,
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: -0.05 + Math.random() * 0.1
         });
-
-        const lineShopY = 370;
-        ctx.strokeStyle = "#ffb3c1"; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(px + 15, lineShopY); ctx.lineTo(px + 175, lineShopY); ctx.stroke();
-
-        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 12px sans-serif";
-        ctx.fillText("🧶 補充魚線", px + 55, lineShopY + 16);
-
-        ctx.fillStyle = totalScore >= 100 ? "#ff85a2" : "#cbd5e1";
-        ctx.beginPath(); ctx.roundRect(px + 15, lineShopY + 25, 75, 25, 12); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
-        ctx.fillText("+1條(100pt)", px + 20, lineShopY + 41);
-
-        ctx.fillStyle = totalScore >= 400 ? "#ff4757" : "#cbd5e1";
-        ctx.beginPath(); ctx.roundRect(px + 100, lineShopY + 25, 75, 25, 12); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
-        ctx.fillText("+5條(400pt)", px + 105, lineShopY + 41);
-
-        if (Date.now() < noticeTimer) {
-            ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 11px sans-serif";
-            ctx.fillText(shopNotice, px + 15, py + 455);
-        }
+      }
     }
-}
 
-function update() {
-    if (gameState === "SELECT_CHAR" || gameState === "GAME_OVER") return;
+    function updateEnvironmentAndParticles() {
+      timeCycleTimer += 0.01;
+      if (Math.floor(Date.now() / 30000) % 2 === 0) {
+        timeOfDay = 'DAY';
+        weatherType = 'SAKURA';
+      } else {
+        timeOfDay = 'NIGHT';
+        weatherType = 'STARLIGHT';
+      }
 
-    if (gameState === "CHARGING") {
-        castPower += powerDirection * 2.8;
-        if (castPower >= 100) { castPower = 100; powerDirection = -1; }
-        else if (castPower <= 0) { castPower = 0; powerDirection = 1; }
-    } else if (gameState === "WAITING" && Date.now() >= biteTimer) {
-        playSound("sine", 700, 1100, 0.2, 0.3);
-        currentFish = getRandomFish();
+      for (let p of particles) {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.rotation += p.rotSpeed;
 
-        if (!currentFish.isSpecial) {
-            currentFishQuality = getRandomQuality();
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      }
+    }
+
+    function drawWeatherParticles() {
+      for (let p of particles) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+
+        if (weatherType === 'SAKURA') {
+          ctx.fillStyle = '#FFB7C5';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2);
+          ctx.fill();
         } else {
-            currentFishQuality = { name: "神聖", badge: "✨", diffMult: 1.0, scoreMult: 1.0 };
+          ctx.fillStyle = '#FFF9DB';
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size * 0.5, 0, Math.PI * 2);
+          ctx.fill();
         }
-
-        lineTension = 10.0;
-        fightStartTime = Date.now();
-        gameState = "FIGHTING";
-        actionBtn.innerText = "按住收線!!";
-    } else if (gameState === "FIGHTING") {
-        const equippedRod = RODS[equippedRodIndex];
-        const qualityDiff = currentFishQuality ? currentFishQuality.diffMult : 1.0;
-
-        if (isPressing) {
-            fishDistance -= equippedRod.reelSpeed;
-            lineTension += (0.75 * equippedRod.tensionMult * qualityDiff);
-            if (Math.random() < 0.2) playSound("sine", 300, 400, 0.05, 0.1);
-        } else {
-            lineTension -= 0.85;
-            fishDistance += (currentFish.difficulty * qualityDiff) * 0.25;
-        }
-
-        lineTension = Math.max(0, Math.min(100, lineTension));
-        fishDistance = Math.max(0, Math.min(100, fishDistance));
-
-        if (Date.now() - fightStartTime > 500) {
-            if (lineTension >= 100 || fishDistance >= 100) {
-                playSound("square", 180, 80, 0.3, 0.3);
-                resultMsg = lineTension >= 100 ? "魚線斷掉啦！" : "魚兒溜走了～";
-                scoreGainedMsg = "-50 PT (魚線耗損 -1)";
-                totalScore = Math.max(0, totalScore - 50);
-                gameState = "RESULT";
-                actionBtn.innerText = remainingLines <= 0 ? "檢視結算" : "再試一次";
-            } else if (fishDistance <= 0) {
-                playSound("sine", 600, 1200, 0.35, 0.3);
-                currentFish.count++;
-                
-                remainingLines++; 
-
-                const gainedScore = Math.floor(currentFish.score * currentFishQuality.scoreMult);
-                totalScore += gainedScore;
-                totalCatches++;
-
-                const qualityPrefix = currentFishQuality.badge ? `[${currentFishQuality.name} ${currentFishQuality.badge}] ` : "";
-                resultMsg = `成功釣到 ${qualityPrefix}${currentFish.name}！`;
-                scoreGainedMsg = `+${gainedScore} PT GET! (魚線保留)`;
-                gameState = "RESULT";
-                actionBtn.innerText = "再試一次";
-            }
-        }
-    }
-}
-
-function render() {
-    if (gameState === "SELECT_CHAR") {
-        drawCharacterSelectScreen();
-        return;
+        ctx.restore();
+      }
     }
 
-    const now = Date.now();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawKawaiiBackground(now);
-    drawKawaiiFisherman(50, 155, CHARACTERS[selectedCharIndex]);
+    function switchShopTab(tab) {
+      activeShopTab = tab;
 
-    if (gameState === "WAITING" || gameState === "FIGHTING") {
-        const rodTipX = 115;
-        const rodTipY = 135;
-        const bobberX = 170 + (fishDistance * 3.1);
-        const bobberY = 215 + Math.sin(now * 0.006) * 4;
+      // Update button styling
+      const btnRods = document.getElementById('tabBtnRods');
+      const btnOutfits = document.getElementById('tabBtnOutfits');
+      const btnHats = document.getElementById('tabBtnHats');
 
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(rodTipX, rodTipY); ctx.lineTo(bobberX, bobberY); ctx.stroke();
+      const activeClass = 'px-3 py-1.5 rounded-xl font-black text-xs bg-amber-800 text-white shadow';
+      const inactiveClass = 'px-3 py-1.5 rounded-xl font-black text-xs bg-amber-200 text-amber-900 hover:bg-amber-300';
 
-        ctx.fillStyle = "#ff758f";
-        ctx.beginPath(); ctx.arc(bobberX, bobberY, 6, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#fff";
-        ctx.beginPath(); ctx.arc(bobberX - 2, bobberY - 2, 2, 0, Math.PI * 2); ctx.fill();
+      if (btnRods) btnRods.className = tab === 'rods' ? activeClass : inactiveClass;
+      if (btnOutfits) btnOutfits.className = tab === 'outfits' ? activeClass : inactiveClass;
+      if (btnHats) btnHats.className = tab === 'hats' ? activeClass : inactiveClass;
 
-        if (gameState === "FIGHTING" && currentFish) {
-            drawKawaiiFish(bobberX, bobberY + 30, currentFish);
-        }
+      renderShopItems();
     }
 
-    const centerX = 265;
-    ctx.textAlign = "center";
-    
-    if (gameState === "IDLE") {
-        ctx.fillStyle = "#590d22"; ctx.font = "bold 16px '微軟正黑體', sans-serif";
-        ctx.fillText("按住按鈕進行蓄力甩竿吧！", centerX, 35);
-        ctx.fillStyle = "#0077b6"; ctx.font = "bold 13px sans-serif";
-        ctx.fillText(`🧶 剩餘魚線: ${remainingLines} 條 (每次甩竿耗損 1 條)`, centerX, 60);
-    } else if (gameState === "CHARGING") {
-        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 16px sans-serif";
-        ctx.fillText("鬆開按鈕拋出浮標！", centerX, 28);
+    function renderShopItems() {
+      const container = document.getElementById('shopItemList');
+      if (!container) return;
 
-        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(125, 38, 280, 22, 11); ctx.fill();
-        ctx.strokeStyle = "#ff758f"; ctx.lineWidth = 3; ctx.stroke();
-
-        const pColor = castPower > 80 ? "#ff4757" : (castPower > 45 ? "#ffd166" : "#06d6a0");
-        ctx.fillStyle = pColor;
-        ctx.beginPath(); ctx.roundRect(128, 41, (castPower / 100.0) * 274, 16, 8); ctx.fill();
-    } else if (gameState === "WAITING") {
-        ctx.fillStyle = "#590d22"; ctx.font = "bold 16px sans-serif";
-        ctx.fillText(`甩竿距離：${Math.floor(fishDistance)} 米`, centerX, 40);
-        ctx.fillStyle = "#ff758f"; ctx.font = "bold 14px sans-serif";
-        ctx.fillText("靜心等待魚兒上鉤...", centerX, 65);
-    } else if (gameState === "FIGHTING") {
-        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(125, 25, 280, 18, 9); ctx.fill();
-        ctx.fillStyle = lineTension > 75 ? "#ff4d6d" : "#06d6a0";
-        ctx.beginPath(); ctx.roundRect(127, 27, lineTension * 2.76, 14, 7); ctx.fill();
-
-        ctx.fillStyle = "#590d22"; ctx.font = "bold 12px sans-serif";
-        ctx.fillText(`魚線張力: ${Math.floor(lineTension)}%`, centerX, 20);
-
-        ctx.fillStyle = "#ff4d6d"; ctx.font = "bold 14px sans-serif";
-        const qText = currentFishQuality.badge ? `【品質：${currentFishQuality.name} ${currentFishQuality.badge}】` : "";
-        ctx.fillText(`${qText} 連按或按住按鈕快速收線！`, centerX, 70);
-    } else if (gameState === "RESULT") {
-        ctx.fillStyle = resultMsg.includes("成功") ? "#ff4d6d" : "#e63946";
-        ctx.font = "bold 18px '微軟正黑體', sans-serif";
-        ctx.fillText(resultMsg, centerX, 40);
-
-        ctx.fillStyle = resultMsg.includes("成功") ? "#2a9d8f" : "#e63946";
-        ctx.font = "bold 15px sans-serif";
-        ctx.fillText(scoreGainedMsg, centerX, 65);
-
-        if (currentFish && resultMsg.includes("成功")) {
-            drawKawaiiFish(centerX, 130, currentFish, 1.4);
-        }
-    } else if (gameState === "GAME_OVER") {
-        ctx.fillStyle = "#d62828";
-        ctx.font = "bold 24px '微軟正黑體', sans-serif";
-        ctx.fillText("😭 無L哂魚線啦，GAME OVER 😭", centerX, 110);
-        ctx.fillStyle = "#590d22";
-        ctx.font = "bold 15px sans-serif";
-        ctx.fillText(`本次獲得總點數: ${totalScore} PT`, centerX, 150);
-        ctx.fillText(`成功釣起魚類: ${totalCatches} 尾`, centerX, 180);
-        ctx.fillStyle = "#0077b6";
-        ctx.fillText("點擊按鈕重置 10 條魚線重新開始！", centerX, 220);
+      if (activeShopTab === 'rods') {
+        container.innerHTML = RODS.map(rod => {
+          const isUnlocked = unlockedRods.includes(rod.id);
+          const isEquipped = equippedRod.id === rod.id;
+          return `
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-amber-100/80 border-2 border-amber-300">
+              <div>
+                <div class="font-black text-amber-950 text-xs sm:text-sm flex items-center gap-1.5">
+                  <span class="w-3.5 h-3.5 rounded-full border border-amber-800" style="background-color: ${rod.color}"></span>
+                  ${rod.name[lang]}
+                </div>
+                <div class="text-[10px] text-amber-800 font-bold">
+                  ${lang === 'zh' ? '收線速度' : 'Reel Speed'}: +${Math.round((rod.reelSpeed - 1) * 100)}% | ${lang === 'zh' ? '抗拉力' : 'Tension'}: -${Math.round((1 - rod.tensionReduction) * 100)}%
+                </div>
+              </div>
+              <div>
+                ${isEquipped ? `
+                  <span class="px-3 py-1.5 rounded-xl bg-amber-800 text-white font-extrabold text-xs">${I18N[lang].equipped}</span>
+                ` : isUnlocked ? `
+                  <button onclick="equipRod('${rod.id}')" class="btn-kawaii-blue py-1.5 px-3 rounded-xl text-white font-bold text-xs">${I18N[lang].equip}</button>
+                ` : `
+                  <button onclick="buyRod('${rod.id}', ${rod.price})" class="btn-kawaii-pink py-1.5 px-3 rounded-xl text-white font-bold text-xs">
+                    ${I18N[lang].buy} (${rod.price} PT)
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else if (activeShopTab === 'outfits') {
+        container.innerHTML = OUTFITS.map(outfit => {
+          const isUnlocked = unlockedOutfits.includes(outfit.id);
+          const isEquipped = equippedOutfit.id === outfit.id;
+          return `
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-amber-100/80 border-2 border-amber-300">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg border-2 border-amber-800 flex-shrink-0" style="background-color: ${outfit.color}"></span>
+                <div>
+                  <div class="font-black text-amber-950 text-xs sm:text-sm">${outfit.name[lang]}</div>
+                  <div class="text-[10px] text-amber-800 font-bold">${lang === 'zh' ? '漁夫戰袍款式' : 'Fisherman Outfit Style'}</div>
+                </div>
+              </div>
+              <div>
+                ${isEquipped ? `
+                  <span class="px-3 py-1.5 rounded-xl bg-amber-800 text-white font-extrabold text-xs">${I18N[lang].equipped}</span>
+                ` : isUnlocked ? `
+                  <button onclick="equipOutfit('${outfit.id}')" class="btn-kawaii-blue py-1.5 px-3 rounded-xl text-white font-bold text-xs">${I18N[lang].equip}</button>
+                ` : `
+                  <button onclick="buyOutfit('${outfit.id}', ${outfit.price})" class="btn-kawaii-pink py-1.5 px-3 rounded-xl text-white font-bold text-xs">
+                    ${I18N[lang].buy} (${outfit.price} PT)
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else if (activeShopTab === 'hats') {
+        container.innerHTML = HATS.map(hat => {
+          const isUnlocked = unlockedHats.includes(hat.id);
+          const isEquipped = equippedHat.id === hat.id;
+          return `
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-amber-100/80 border-2 border-amber-300">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">👒</span>
+                <div>
+                  <div class="font-black text-amber-950 text-xs sm:text-sm">${hat.name[lang]}</div>
+                  <div class="text-[10px] text-amber-800 font-bold">${lang === 'zh' ? '頭飾配件' : 'Hat Accessory'}</div>
+                </div>
+              </div>
+              <div>
+                ${isEquipped ? `
+                  <span class="px-3 py-1.5 rounded-xl bg-amber-800 text-white font-extrabold text-xs">${I18N[lang].equipped}</span>
+                ` : isUnlocked ? `
+                  <button onclick="equipHat('${hat.id}')" class="btn-kawaii-blue py-1.5 px-3 rounded-xl text-white font-bold text-xs">${I18N[lang].equip}</button>
+                ` : `
+                  <button onclick="buyHat('${hat.id}', ${hat.price})" class="btn-kawaii-pink py-1.5 px-3 rounded-xl text-white font-bold text-xs">
+                    ${I18N[lang].buy} (${hat.price} PT)
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
     }
-    ctx.textAlign = "left";
 
-    drawSidebar();
-}
+    function buyRod(rodId, price) {
+      if (score >= price) {
+        score -= price;
+        unlockedRods.push(rodId);
+        equippedRod = RODS.find(r => r.id === rodId);
+        updateHUD();
+        renderShopItems();
+        saveLocalStorageData();
+        showToast(lang === 'zh' ? '🎉 成功購買並裝備釣竿！' : '🎉 Purchased Rod!');
+      } else {
+        showToast(lang === 'zh' ? '⚠️ 得分 (PT) 不足！' : '⚠️ Not enough PT!');
+      }
+    }
 
-function gameLoop() {
-    update();
-    render();
-    requestAnimationFrame(gameLoop);
-}
+    function equipRod(rodId) {
+      equippedRod = RODS.find(r => r.id === rodId);
+      updateHUD();
+      renderShopItems();
+      saveLocalStorageData();
+      showToast(lang === 'zh' ? '✨ 已裝備釣竿！' : '✨ Equipped Rod!');
+    }
 
-gameLoop();
-</script>
+    function buyOutfit(id, price) {
+      if (score >= price) {
+        score -= price;
+        unlockedOutfits.push(id);
+        equippedOutfit = OUTFITS.find(o => o.id === id);
+        updateHUD();
+        renderShopItems();
+        saveLocalStorageData();
+        showToast(lang === 'zh' ? '🎉 成功購買新衣服！' : '🎉 Purchased Outfit!');
+      } else {
+        showToast(lang === 'zh' ? '⚠️ 得分 (PT) 不足！' : '⚠️ Not enough PT!');
+      }
+    }
+
+    function equipOutfit(id) {
+      equippedOutfit = OUTFITS.find(o => o.id === id);
+      renderShopItems();
+      saveLocalStorageData();
+      showToast(lang === 'zh' ? '✨ 已換上新衣服！' : '✨ Equipped Outfit!');
+    }
+
+    function buyHat(id, price) {
+      if (score >= price) {
+        score -= price;
+        unlockedHats.push(id);
+        equippedHat = HATS.find(h => h.id === id);
+        updateHUD();
+        renderShopItems();
+        saveLocalStorageData();
+        showToast(lang === 'zh' ? '🎉 成功購買帽子！' : '🎉 Purchased Hat!');
+      } else {
+        showToast(lang === 'zh' ? '⚠️ 得分 (PT) 不足！' : '⚠️ Not enough PT!');
+      }
+    }
+
+    function equipHat(id) {
+      equippedHat = HATS.find(h => h.id === id);
+      renderShopItems();
+      saveLocalStorageData();
+      showToast(lang === 'zh' ? '✨ 已戴上新帽子！' : '✨ Equipped Hat!');
+    }
+
+    function buyLines(count, cost) {
+      if (score >= cost) {
+        score -= cost;
+        lines += count;
+        updateHUD();
+        saveLocalStorageData();
+        showToast(lang === 'zh' ? `🛍️ 成功購買 +${count} 條魚線！` : `🛍️ Bought +${count} Lines!`);
+      } else {
+        showToast(lang === 'zh' ? '⚠️ 得分 (PT) 不足！' : '⚠️ Not enough PT!');
+      }
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      container.innerHTML = highScores.map((hs, index) => `
+        <div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-100/80 border border-amber-300 font-bold text-sm">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-300' : index === 2 ? 'bg-amber-600' : 'bg-amber-200'} text-amber-950 flex items-center justify-center text-xs font-black">
+              ${index + 1}
+            </span>
+            <span class="text-amber-950 font-black">${hs.name}</span>
+          </div>
+          <span class="text-rose-600 font-extrabold">${hs.score} PT</span>
+        </div>
+      `).join('');
+    }
+
+    function renderFishLog() {
+      const container = document.getElementById('fishLogList');
+      container.innerHTML = FISH_SPECIES.map(fish => {
+        const count = fishLog[fish.id] || 0;
+        return `
+          <div class="flex items-center justify-between p-2.5 rounded-2xl ${count > 0 ? 'bg-amber-100/90 border-amber-400' : 'bg-gray-200/60 border-gray-300'} border-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-3xl">${fish.icon}</span>
+              <div>
+                <div class="font-black text-amber-950 text-xs sm:text-sm">${fish.name[lang]}</div>
+                <div class="text-[10px] text-amber-800 font-bold">${lang === 'zh' ? '基礎分數' : 'Base PT'}: ${fish.baseScore} PT</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-black ${count > 0 ? 'text-emerald-700' : 'text-gray-500'}">
+                ${I18N[lang].catches}: ${count}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showResultModal(isCatch, points) {
+      const modal = document.getElementById('resultModal');
+      const title = document.getElementById('resultTitle');
+      const desc = document.getElementById('resultDesc');
+      const icon = document.getElementById('resultIcon');
+      const badge = document.getElementById('resultFishBadge');
+
+      if (isCatch) {
+        icon.innerText = activeFish.icon;
+        title.innerText = `${activeFish.name[lang]}!`;
+        desc.innerText = `+${points} PT！`;
+        badge.classList.remove('hidden');
+        document.getElementById('resultFishName').innerText = activeFish.name[lang];
+        document.getElementById('resultFishQuality').innerText = `${lang === 'zh' ? '品質' : 'Quality'}: ${lang === 'zh' ? activeQuality.nameZh : activeQuality.nameEn}`;
+        document.getElementById('resultFishQuality').style.color = activeQuality.color;
+      } else {
+        icon.innerText = "🥀";
+        title.innerText = I18N[lang].gameOver;
+        desc.innerText = `${I18N[lang].gameOverDesc} ${points} PT`;
+        badge.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeResultModal() {
+      document.getElementById('resultModal').classList.add('hidden');
+      if (gameState === 'GAME_OVER') {
+        score = 0;
+        lines = 10;
+        gameState = 'READY';
+        updateHUD();
+        updateActionButtonText();
+        
+        // Show character selection modal on game over reset
+        if (!isCharLocked) {
+          document.getElementById('charSelectModal').classList.remove('hidden');
+        }
+      }
+    }
+
+    function toggleModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.toggle('hidden');
+        if (!modal.classList.contains('hidden')) {
+          renderLeaderboard();
+          renderFishLog();
+          renderShopItems();
+        }
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('gameToast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.remove('opacity-0', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-4');
+      }, 2200);
+    }
+
+    function bindEvents() {
+      const mainBtn = document.getElementById('btnMainAction');
+      const holdBtn = document.getElementById('btnHoldCast');
+
+      mainBtn.addEventListener('mousedown', handlePrimaryActionStart);
+      mainBtn.addEventListener('mouseup', handlePrimaryActionEnd);
+      mainBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handlePrimaryActionStart(); });
+      mainBtn.addEventListener('touchend', (e) => { e.preventDefault(); handlePrimaryActionEnd(); });
+
+      holdBtn.addEventListener('mousedown', startChargingCast);
+      holdBtn.addEventListener('mouseup', releaseCast);
+      holdBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startChargingCast(); });
+      holdBtn.addEventListener('touchend', (e) => { e.preventDefault(); releaseCast(); });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !e.repeat) {
+          if (gameState === 'READY') {
+            startChargingCast();
+          } else if (gameState === 'FIGHTING') {
+            isReeling = true;
+          }
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        if (e.code === 'Space') {
+          if (gameState === 'CHARGING') {
+            releaseCast();
+          } else if (gameState === 'FIGHTING') {
+            isReeling = false;
+          }
+        }
+      });
+    }
+
+    function handlePrimaryActionStart() {
+      if (gameState === 'READY') {
+        startChargingCast();
+      } else if (gameState === 'FIGHTING') {
+        isReeling = true;
+      }
+    }
+
+    function handlePrimaryActionEnd() {
+      if (gameState === 'CHARGING') {
+        releaseCast();
+      } else if (gameState === 'FIGHTING') {
+        isReeling = false;
+      }
+    }
+
+    function saveLocalStorageData() {
+      const data = {
+        score,
+        lines,
+        selectedCharId: selectedChar.id,
+        isCharLocked,
+        equippedRodId: equippedRod.id,
+        unlockedRods,
+        equippedOutfitId: equippedOutfit.id,
+        unlockedOutfits,
+        equippedHatId: equippedHat.id,
+        unlockedHats,
+        fishLog,
+        highScores,
+        lang
+      };
+      localStorage.setItem('kawaii_fishing_data', JSON.stringify(data));
+    }
+
+    function loadLocalStorageData() {
+      try {
+        const raw = localStorage.getItem('kawaii_fishing_data');
+        if (raw) {
+          const data = JSON.parse(raw);
+          score = data.score || 0;
+          lines = data.lines !== undefined ? data.lines : 10;
+          lang = data.lang || 'zh';
+          isCharLocked = data.isCharLocked || false;
+          if (data.selectedCharId) {
+            selectedChar = CHARACTERS.find(c => c.id === data.selectedCharId) || CHARACTERS[0];
+            tempSelectedChar = selectedChar;
+          }
+          if (data.unlockedRods) unlockedRods = data.unlockedRods;
+          if (data.equippedRodId) equippedRod = RODS.find(r => r.id === data.equippedRodId) || RODS[0];
+          
+          if (data.unlockedOutfits) unlockedOutfits = data.unlockedOutfits;
+          if (data.equippedOutfitId) equippedOutfit = OUTFITS.find(o => o.id === data.equippedOutfitId) || OUTFITS[0];
+          
+          if (data.unlockedHats) unlockedHats = data.unlockedHats;
+          if (data.equippedHatId) equippedHat = HATS.find(h => h.id === data.equippedHatId) || HATS[0];
+
+          if (data.fishLog) fishLog = data.fishLog;
+          if (data.highScores) highScores = data.highScores;
+        }
+      } catch (e) {
+        console.error("Failed to load saved data", e);
+      }
+    }
+  </script>
+
 </body>
 </html>

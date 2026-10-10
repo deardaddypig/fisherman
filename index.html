@@ -2,6 +2,7 @@
 <html lang="zh-TW">
 <head>
 
+
 <meta name="robots" content="noindex, nofollow, noai, noimageai">
 <meta name="googlebot" content="noindex, nofollow, noai">
 <meta name="GPTBot" content="noindex, nofollow">
@@ -11,12 +12,12 @@
 
 
 <script>
-  // 禁用滑鼠右鍵選單
+  // 禁右鍵
   document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
   });
 
-  // 禁用常見快捷鍵 (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S)
+  // 禁快捷鍵
   document.addEventListener('keydown', function(e) {
     if (
       e.key === 'F12' || 
@@ -81,7 +82,13 @@
       font-family: 'M PLUS Rounded 1c', 'Fredoka', sans-serif;
       background: linear-gradient(135deg, #FFE4E1 0%, #E6C9FF 100%);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       overflow-x: hidden;
+      margin: 0;
+      padding: 8px;
     }
 
     /* Wood Texture Effect */
@@ -141,6 +148,16 @@
       box-shadow: 0 0 0 #1864AB;
     }
 
+    .btn-kawaii-gold {
+      background: linear-gradient(180deg, #FFE066 0%, #FCC419 100%);
+      border: 3px solid #D9480F;
+      box-shadow: 0 4px 0 #D9480F, inset 0 2px 0 rgba(255,255,255,0.4);
+    }
+    .btn-kawaii-gold:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #D9480F;
+    }
+
     /* Pulse & Shake Animation */
     @keyframes pulseGlow {
       0%, 100% { transform: scale(1); }
@@ -192,7 +209,7 @@
         <span class="text-3xl sm:text-4xl">🌸</span>
         <div>
           <h1 class="font-extrabold text-amber-950 text-base sm:text-xl tracking-tight leading-tight">釣魚物語</h1>
-          <p class="text-[10px] sm:text-xs text-amber-800 font-semibold" id="headerSub">Kawaii Fishing Festival</p>
+          <p class="text-[10px] sm:text-xs text-amber-800 font-semibold" id="headerSub">Fishing Festival</p>
         </div>
       </div>
 
@@ -239,7 +256,7 @@
       <!-- Tension Bar Overlay (Visible during FISHING / REELING state) -->
       <div id="tensionGaugeContainer" class="absolute top-4 left-1/2 -translate-x-1/2 w-11/12 max-w-md bg-amber-950/80 backdrop-blur-md p-3 rounded-2xl border-2 border-amber-400 shadow-2xl hidden transition-all">
         <div class="flex justify-between items-center text-xs text-amber-200 font-bold mb-1">
-          <span id="lblTensionTitle"><i class="fas fa-gauge-high mr-1 text-rose-400"></i>LINE TENSION</span>
+          <span id="lblTensionTitle"><i class="fas fa-gauge-high mr-1 text-rose-400"></i>LINE TENSION 張力 </span>
           <span id="uiDistanceLabel" class="text-yellow-300 font-black">20.0m</span>
         </div>
         <!-- Progress Tension Bar -->
@@ -255,10 +272,10 @@
       <div id="castContainer" class="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center p-4 z-20 hidden">
         <div class="wood-panel p-5 sm:p-6 text-center max-w-sm w-full shadow-2xl flex flex-col items-center">
           <h3 class="text-base sm:text-lg font-black text-amber-950 mb-1 flex items-center gap-2" id="castTitleText">
-            <i class="fas fa-bullseye text-rose-500"></i> 儲力命中目標!  CHARGE & MATCH TARGET!
+            <i class="fas fa-bullseye text-rose-500"></i> CHARGE & MATCH TARGET!
           </h3>
           <p class="text-xs text-amber-900 font-bold mb-4" id="castSubText">
-            Hold button or SPACE, then release in the <span class="text-emerald-700 font-black underline">目標 TARGET </span>!
+            Hold button or SPACE, then release in <span class="text-emerald-700 font-black underline">目標 TARGET </span>!
           </p>
 
           <!-- Power Bar Box -->
@@ -303,7 +320,7 @@
               🔒 已鎖定 (Locked)
             </span>
           </div>
-          <p id="activeCharPerk" class="text-xs text-rose-700 font-extrabold">收線速度 +10%</p>
+          <p id="activeCharPerk" class="text-xs text-rose-700 font-extrabold">收線速度 +15%</p>
         </div>
       </div>
 
@@ -311,7 +328,7 @@
       <div class="w-full sm:w-64">
         <button id="btnMainAction" class="btn-kawaii-pink w-full py-3.5 sm:py-4 rounded-2xl text-white font-black text-base sm:text-lg shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-transform active:scale-95">
           <i class="fas fa-fish-fins text-yellow-200"></i>
-          <span id="txtMainAction">拋竿 </span>
+          <span id="txtMainAction">拋竿</span>
         </button>
       </div>
     </div>
@@ -322,7 +339,7 @@
   <div id="charSelectModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-3">
     <div class="wood-panel max-w-lg w-full p-6 text-center relative shadow-2xl flex flex-col items-center">
       <h2 id="charSelectTitle" class="text-xl sm:text-2xl font-black text-amber-950 mb-1 flex items-center gap-2">
-        🌸 選擇你的漁夫角色 Choose Character
+        🌸 選擇你的角色 Choose Character
       </h2>
       <p id="charSelectSub" class="text-xs sm:text-sm text-amber-900 font-bold mb-4">
         ⚠️ 選擇後此局不可更改！每個角色擁有獨特加成。
@@ -345,13 +362,13 @@
         <i class="fas fa-xmark"></i>
       </button>
       <h2 class="text-lg font-black text-amber-950 mb-2 flex items-center gap-2" id="shopTitle">
-        <i class="fas fa-store text-amber-700"></i> 裝備商店 Shop
+        <i class="fas fa-store text-amber-700"></i> 歷德商店 Lidl Shop
       </h2>
 
       <!-- Shop Navigation Tabs -->
       <div class="flex gap-2 mb-3 border-b-2 border-amber-300 pb-2 overflow-x-auto">
         <button onclick="switchShopTab('rods')" id="tabBtnRods" class="px-3 py-1.5 rounded-xl font-black text-xs bg-amber-800 text-white shadow">
-          🎣 <span id="lblTabRods">釣竿 Rods</span>
+          🎣 <span id="lblTabRods">魚竿 Rods</span>
         </button>
         <button onclick="switchShopTab('outfits')" id="tabBtnOutfits" class="px-3 py-1.5 rounded-xl font-black text-xs bg-amber-200 text-amber-900 hover:bg-amber-300">
           👕 <span id="lblTabOutfits">衣服 Clothes</span>
@@ -379,21 +396,37 @@
 
   <!-- MODAL: FISH COLLECTION LOG -->
   <div id="logModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 hidden">
-    <div class="wood-panel max-w-md w-full p-5 relative flex flex-col max-h-[90vh]">
-      <button onclick="toggleModal('logModal')" class="absolute top-3 right-3 text-amber-950 hover:text-rose-600 text-xl font-extrabold">
+    <div class="wood-panel max-w-2xl w-full p-5 relative flex flex-col max-h-[95vh]">
+      <button onclick="toggleModal('logModal')" class="absolute top-3 right-3 text-amber-950 hover:text-rose-600 text-xl font-extrabold z-10">
         <i class="fas fa-xmark"></i>
       </button>
-      <h2 class="text-lg font-black text-amber-950 mb-3 flex items-center gap-2" id="logTitle">
-        <i class="fas fa-book text-emerald-700"></i> 水族圖鑑 Fish Log
+      <h2 class="text-lg sm:text-xl font-black text-amber-950 mb-2 flex items-center gap-2 text-center justify-center" id="logTitle">
+        <i class="fas fa-book-open text-emerald-700"></i> 魚類百科全書 (100種魚類圖冊)
       </h2>
+      <p class="text-xs text-amber-800 font-bold text-center mb-3">
+        📖 左右瀏覽，每頁10款，總共10頁
+      </p>
 
-      <div class="overflow-y-auto space-y-2 pr-1 my-2 flex-1" id="fishLogList">
-        <!-- Injected via JS -->
+      <!-- Book Spread Container (Left & Right Page) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 my-2 overflow-y-auto p-1 bg-amber-50/70 rounded-2xl border-4 border-amber-800/60 shadow-inner">
+        <!-- Left Page -->
+        <div id="bookLeftPage" class="bg-amber-100/90 border-2 border-amber-400 rounded-xl p-3 flex flex-col justify-between shadow-sm">
+          <!-- Injected via JS -->
+        </div>
+        <!-- Right Page -->
+        <div id="bookRightPage" class="bg-amber-100/90 border-2 border-amber-400 rounded-xl p-3 flex flex-col justify-between shadow-sm">
+          <!-- Injected via JS -->
+        </div>
       </div>
 
-      <div class="pt-2 border-t-2 border-amber-300 text-right">
-        <button onclick="toggleModal('logModal')" class="wood-button px-4 py-2 text-white font-extrabold text-xs rounded-xl">
-          關閉 Close
+      <!-- Book Pagination Footer -->
+      <div class="pt-3 border-t-2 border-amber-300 flex justify-between items-center px-2">
+        <button onclick="changeBookPage(-1)" class="wood-button px-4 py-2 text-white font-extrabold text-xs rounded-xl flex items-center gap-1">
+          <i class="fas fa-chevron-left"></i> <span id="lblPrevPage">上一頁 Prev</span>
+        </button>
+        <span id="bookPageIndicator" class="font-black text-amber-950 text-sm">第 1 / 20 頁</span>
+        <button onclick="changeBookPage(1)" class="wood-button px-4 py-2 text-white font-extrabold text-xs rounded-xl flex items-center gap-1">
+          <span id="lblNextPage">下一頁 Next</span> <i class="fas fa-chevron-right"></i>
         </button>
       </div>
     </div>
@@ -421,7 +454,7 @@
     </div>
   </div>
 
-  <!-- MODAL: RESULT / CATCH OVERLAY -->
+  <!-- MODAL: RESULT / CATCH / FAILURE / GAMEOVER OVERLAY -->
   <div id="resultModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 hidden">
     <div class="wood-panel max-w-sm w-full p-6 text-center relative shadow-2xl flex flex-col items-center">
       <div id="resultIcon" class="text-6xl my-2 pulse-glow">🐟</div>
@@ -433,56 +466,87 @@
         <div class="text-xs font-bold text-rose-600" id="resultFishQuality">品質: 珍稀 (Rare)</div>
       </div>
 
-      <button onclick="closeResultModal()" class="btn-kawaii-pink w-full py-3 mt-3 text-white font-extrabold text-base rounded-2xl shadow-md">
-        確定 Confirm
-      </button>
+      <!-- Action Buttons Container -->
+      <div id="resultModalButtons" class="w-full flex flex-col gap-2 mt-3">
+        <!-- Revive/Ad Button (Shown only on Game Over) -->
+        <button id="btnWatchAdRevive" onclick="watchAdToRevive()" class="btn-kawaii-gold w-full py-3 text-amber-950 font-black text-sm rounded-2xl shadow-md flex items-center justify-center gap-2 hidden">
+          <i class="fas fa-tv text-amber-900"></i>
+          <span id="lblWatchAdText">觀看廣告重生 (另送+5魚線)</span>
+        </button>
+
+        <button onclick="closeResultModal()" class="btn-kawaii-pink w-full py-3 text-white font-extrabold text-base rounded-2xl shadow-md">
+          <span id="btnResultConfirmLabel">我知道了 Confirm</span>
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
     // --- GAME CONSTANTS & DATA ---
     const CHARACTERS = [
-      { id: 'pascal', name: '貓咪', avatar: '🐱', color: '#FFB7C5', perk: 'reel', bonusText: '收線速度 +10%' },
-      { id: 'florian', name: '兔仔', avatar: '🐰', color: '#B2F2BB', perk: 'tension', bonusText: '抗拉力 +20%' },
+      { id: 'pascal', name: '貓咪', avatar: '🐱', color: '#FFB7C5', perk: 'reel', bonusText: '收線速度 +15%' },
+      { id: 'florian', name: '兔子', avatar: '🐰', color: '#B2F2BB', perk: 'tension', bonusText: '抗拉力 +20%' },
       { id: 'kern', name: '柴犬', avatar: '🐶', color: '#FFD700', perk: 'score', bonusText: '釣魚得分 +10%' }
     ];
 
     const RODS = [
-      { id: 'rod_bamboo', name: { zh: '二手竹竿', en: 'Bamboo Rod' }, price: 0, reelSpeed: 1.0, tensionReduction: 1.0, color: '#D7A15C' },
-      { id: 'rod_sakura', name: { zh: '誠實之竿', en: 'Shing Rod' }, price: 150, reelSpeed: 1.25, tensionReduction: 0.85, color: '#FF9EAA' },
-      { id: 'rod_golden', name: { zh: '黃金釣竿', en: 'Emperor Rod' }, price: 1000, reelSpeed: 1.5, tensionReduction: 0.70, color: '#FFD700' }
+      { id: 'rod_bamboo', name: { zh: '爛鬼無用竿', en: 'Bamboo Rod' }, price: 0, reelSpeed: 1.0, tensionReduction: 1.0, color: '#D7A15C' },
+      { id: 'rod_sakura', name: { zh: '成功在望竿', en: 'Sakura Sweet Rod' }, price: 2000, reelSpeed: 1.25, tensionReduction: 0.9, color: '#FF9EAA' },
+      { id: 'rod_golden', name: { zh: '強力無比竿', en: 'Golden Emperor Rod' }, price: 6677, reelSpeed: 1.5, tensionReduction: 0.70, color: '#FFD700' }
     ];
 
     const OUTFITS = [
       { id: 'outfit_denim', name: { zh: '經典牛仔藍', en: 'Classic Denim Blue' }, price: 0, color: '#3B82F6' },
-      { id: 'outfit_sakura', name: { zh: '櫻花粉紅衫', en: 'Sakura Pink Outfit' }, price: 80, color: '#EC4899' },
-      { id: 'outfit_yellow', name: { zh: '活力鮮黃衫', en: 'Vibrant Yellow Outfit' }, price: 120, color: '#EAB308' },
-      { id: 'outfit_mint', name: { zh: '薄荷青綠衫', en: 'Mint Green Outfit' }, price: 180, color: '#10B981' },
-      { id: 'outfit_purple', name: { zh: '夢幻紫色衫', en: 'Dreamy Purple Outfit' }, price: 250, color: '#A855F7' }
+      { id: 'outfit_sakura', name: { zh: '櫻花粉紅衫', en: 'Sakura Pink Outfit' }, price: 800, color: '#EC4899' },
+      { id: 'outfit_yellow', name: { zh: '活力鮮黃衫', en: 'Vibrant Yellow Outfit' }, price: 1200, color: '#EAB308' },
+      { id: 'outfit_mint', name: { zh: '薄荷青綠衫', en: 'Mint Green Outfit' }, price: 1800, color: '#10B981' },
+      { id: 'outfit_purple', name: { zh: '夢幻紫色衫', en: 'Dreamy Purple Outfit' }, price: 2500, color: '#A855F7' }
     ];
 
     const HATS = [
-      { id: 'hat_none', name: { zh: '無帽', en: 'No Hat' }, price: 0, type: 'none', color: 'transparent' },
-      { id: 'hat_straw', name: { zh: '草帽', en: 'Straw Sun Hat' }, price: 200, type: 'straw', color: '#FACC15' },
-      { id: 'hat_bucket', name: { zh: '漁夫帽', en: 'Fisherman Bucket Hat' }, price: 400, type: 'bucket', color: '#047857' },
-      { id: 'hat_cap', name: { zh: '鴨舌帽', en: 'Baseball Cap' }, price: 700, type: 'cap', color: '#EF4444' },
-      { id: 'hat_crown', name: { zh: '金皇冠', en: 'Golden Crown' }, price: 1000, type: 'crown', color: '#F59E0B' }
+      { id: 'hat_none', name: { zh: '帽子', en: 'No Hat' }, price: 0, type: 'none', color: 'transparent' },
+      { id: 'hat_straw', name: { zh: '草帽', en: 'Straw Sun Hat' }, price: 60, type: 'straw', color: '#FACC15' },
+      { id: 'hat_bucket', name: { zh: '漁夫帽', en: 'Fisherman Bucket Hat' }, price: 120, type: 'bucket', color: '#047857' },
+      { id: 'hat_cap', name: { zh: '鴨舌帽', en: 'Baseball Cap' }, price: 250, type: 'cap', color: '#EF4444' },
+      { id: 'hat_crown', name: { zh: '金皇冠', en: 'Golden Crown' }, price: 500, type: 'crown', color: '#F59E0B' }
     ];
 
-    const FISH_SPECIES = [
-      { id: 'goldfish', name: { zh: '櫻花小金魚', en: 'Sakura Goldfish' }, icon: '🐠', baseScore: 3, color: '#FF6B8B', strugglePower: 1.0 },
-      { id: 'clownfish', name: { zh: '熱帶小丑魚', en: 'Tropical Clownfish' }, icon: '🐟', baseScore: 5, color: '#FF922B', strugglePower: 1.2 },
-      { id: 'koi', name: { zh: '錦鯉吉祥物', en: 'Lucky Koi' }, icon: '🐡', baseScore: 9, color: '#FCC419', strugglePower: 1.5 },
-      { id: 'squid', name: { zh: '幻彩小烏賊', en: 'Rainbow Squid' }, icon: '🦑', baseScore: 14, color: '#CC5DE8', strugglePower: 1.8 },
-      { id: 'turtle', name: { zh: '長壽小海龜', en: 'Ancient Sea Turtle' }, icon: '🐢', baseScore: 20, color: '#51CF66', strugglePower: 2.2 },
-      { id: 'special_leader', name: { zh: '神奇歷德魚', en: 'Magic Lidl Fish' }, icon: '👑', baseScore: 100, color: '#339AF0', strugglePower: 2.8, isSpecialLeader: true }
-    ];
+    // --- GENERATE 100 FISH SPECIES ---
+    const FISH_ICONS = ['🐠', '🐟', '🐡', '🦑', '🐢', '🦐', '🦀', '🐙', '🐳', '🐬', '🦈', '🪼', '🦞', '🦭', '🐊'];
+    const FISH_COLORS = ['#FF6B8B', '#FF922B', '#FCC419', '#CC5DE8', '#51CF66', '#339AF0', '#FF8787', '#20C997', '#845EF7', '#F06595'];
+    
+    function generate100FishSpecies() {
+      const list = [];
+      for (let i = 1; i <= 100; i++) {
+        const icon = FISH_ICONS[(i - 1) % FISH_ICONS.length];
+        const color = FISH_COLORS[(i - 1) % FISH_COLORS.length];
+        const baseScore = 20 + i * 1;
+        const strugglePower = 0.8 + (i * 0.015);
+        const isSpecialLeader = (i === 100);
+
+        list.push({
+          id: `fish_${i}`,
+          name: {
+            zh: i === 100 ? '櫻花海神巨獸 👑' : `第 ${i} 號魚`,
+            en: i === 100 ? 'Sakura Leviathan 👑' : ` Fish #${i}`
+          },
+          icon: icon,
+          baseScore: baseScore,
+          color: color,
+          strugglePower: strugglePower,
+          isSpecialLeader: isSpecialLeader
+        });
+      }
+      return list;
+    }
+
+    const FISH_SPECIES = generate100FishSpecies();
 
     const QUALITIES = [
       { nameZh: '普通', nameEn: 'Common', multiplier: 1.0, color: '#495057' },
-      { nameZh: '良好', nameEn: 'Good', multiplier: 1.15, color: '#2B8A3E' },
+      { nameZh: '良好', nameEn: 'Good', multiplier: 1.1, color: '#2B8A3E' },
       { nameZh: '珍稀', nameEn: 'Rare', multiplier: 1.3, color: '#1864AB' },
-      { nameZh: '傳說', nameEn: 'Legendary', multiplier: 1.8, color: '#D9480F' }
+      { nameZh: '傳說', nameEn: 'Legendary', multiplier: 1.5, color: '#D9480F' }
     ];
 
     const I18N = {
@@ -492,17 +556,20 @@
         cast: '拋竿',
         reeling: '收線 !',
         holding: '蓄力拋竿',
-        perfectCast: '🎯 完美拋竿！',
-        failedCast: '❌ 拋竿失敗！未命中指定範圍！',
-        fishOn: '💥 魚上鉤！快按收線！',
-        lineSnapped: '💥💥💥 睇住呀！魚釣線扯斷啦！ 💥💥💥',
-        fishEscaped: '💨💨💨 絛魚逃走咗啦！ 💨💨💨',
+        perfectCast: '🎯 完美拋竿！(Perfect Cast)',
+        failedCast: '❌ 未命中力量目標！再接再厲！',
+        fishOn: '💥 魚上鉤了！快按住收線！',
+        lineSnapped: '💥 魚線扯斷了！',
+        fishEscaped: '💨 條魚逃走咗啦！',
         equipped: '已裝備',
         equip: '裝備',
         buy: '購買',
         catches: '已捕獲',
         gameOver: '魚線用盡！遊戲結束',
-        gameOverDesc: '最終累計得分:'
+        gameOverDesc: '最終累計得分:',
+        gotIt: '我知道了',
+        watchAd: '俾次機會你 🎬 觀看廣告重生 (送+5魚線)',
+        reviveSuccess: '🎉 重生成功！獲得 +5 條魚線！'
       },
       en: {
         score: 'Score PT',
@@ -511,7 +578,7 @@
         reeling: 'REELING!',
         holding: 'CHARGING',
         perfectCast: '🎯 PERFECT CAST!',
-        failedCast: '❌ CAST FAILED! Out of target zone!',
+        failedCast: '❌ Missed target zone! No line deducted!',
         fishOn: '💥 FISH ON! Hold button to Reel!',
         lineSnapped: '💥 LINE SNAPPED!',
         fishEscaped: '💨 THE FISH ESCAPED!',
@@ -520,13 +587,16 @@
         buy: 'BUY',
         catches: 'Caught',
         gameOver: 'Out of Lines! Game Over',
-        gameOverDesc: 'Final Score:'
+        gameOverDesc: 'Final Score:',
+        gotIt: 'Got It',
+        watchAd: '🎬 Watch Ad to Revive (+5 Lines)',
+        reviveSuccess: '🎉 Revived! Gained +5 Lines!'
       }
     };
 
     // Global Game State
     let lang = 'zh';
-    let gameState = 'READY'; // READY, CHARGING, FISHING, FIGHTING, GAME_OVER
+    let gameState = 'READY'; // READY, CHARGING, FISHING, FIGHTING, GAME_OVER, MODAL_OPEN
     let score = 0;
     let lines = 10;
     
@@ -545,9 +615,12 @@
     let unlockedHats = ['hat_none'];
 
     let fishLog = {};
+    let currentBookPage = 1; // 1 to 20 (5 fish per page -> 100 fish total)
+    const itemsPerPage = 5;
+
     let highScores = [
-      { name: '輕鬆誠', score: 999 },
-      { name: '郭富城', score: 777 },
+      { name: '輕鬆誠', score: 94839769 },
+      { name: '郭富城', score: 999 },
       { name: '章魚成', score: 100 }
     ];
 
@@ -593,7 +666,7 @@
       renderInitialCharPicker();
       updateActiveCharacterDisplay();
       renderShopItems();
-      renderFishLog();
+      renderFishLogBook();
       renderLeaderboard();
       updateHUD();
       updateActionButtonText();
@@ -615,7 +688,14 @@
       if (!canvas) return;
       const rect = canvas.parentElement.getBoundingClientRect();
       canvas.width = rect.width;
-      canvas.height = rect.height;
+      
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        // Enforce 2:3 aspect ratio for mobile screens (Width : Height = 2 : 3)
+        canvas.height = Math.round(rect.width * 1.5);
+      } else {
+        canvas.height = rect.height;
+      }
     }
 
     function updateHUD() {
@@ -629,7 +709,7 @@
       lang = lang === 'zh' ? 'en' : 'zh';
       updateHUD();
       renderShopItems();
-      renderFishLog();
+      renderFishLogBook();
       renderInitialCharPicker();
       updateActiveCharacterDisplay();
       updateActionButtonText();
@@ -644,7 +724,7 @@
       } else if (gameState === 'CHARGING') {
         btnText.innerText = I18N[lang].holding;
       } else if (gameState === 'FISHING') {
-        btnText.innerText = lang === 'zh' ? '等魚上釣...' : 'Waiting...';
+        btnText.innerText = lang === 'zh' ? '等待魚仔...' : 'Waiting...';
       } else if (gameState === 'FIGHTING') {
         btnText.innerText = I18N[lang].reeling;
       }
@@ -692,7 +772,7 @@
         return;
       }
       if (lines <= 0) {
-        showToast(lang === 'zh' ? '魚線用盡！請在 Lidl 商店補充。' : 'No lines left! Restock in Lidl shop.');
+        triggerGameOver();
         return;
       }
 
@@ -700,7 +780,6 @@
       powerValue = 0;
       powerDirection = 1;
 
-      // Random target range (20%-35% width, starting between 25%-65%)
       targetZoneWidth = 20 + Math.floor(Math.random() * 15);
       targetZoneStart = 25 + Math.floor(Math.random() * 40);
       targetZoneEnd = targetZoneStart + targetZoneWidth;
@@ -746,10 +825,11 @@
 
       const isSuccess = powerValue >= targetZoneStart && powerValue <= targetZoneEnd;
 
-      lines--;
-      updateHUD();
-
       if (isSuccess) {
+        // IMPROVEMENT #1: Deduct line ONLY when successfully aiming into target range
+        lines--;
+        updateHUD();
+
         showToast(I18N[lang].perfectCast);
         currentDistance = 18.0 + (powerValue / 100.0) * 17.0;
         createSplashParticles(canvas.width * (0.36 + (powerValue / 100.0) * 0.46), canvas.height * 0.65, 12);
@@ -762,13 +842,10 @@
           }
         }, 1500 + Math.random() * 2000);
       } else {
+        // IMPROVEMENT #1: Failed cast does NOT deduct lines
         showToast(I18N[lang].failedCast);
-        gameState = 'READY';
-        updateActionButtonText();
-
-        if (lines <= 0) {
-          setTimeout(triggerGameOver, 1000);
-        }
+        // IMPROVEMENT #2: Popup notification on cast failure
+        showResultModal('cast_fail', 0, I18N[lang].failedCast);
       }
     }
 
@@ -777,11 +854,15 @@
       lineTension = 15;
 
       const roll = Math.random();
-      if (roll < 0.02) {
-        activeFish = FISH_SPECIES.find(f => f.isSpecialLeader);
+      if (roll < 0.005) {
+        // Ultra rare #100 leviathan
+        activeFish = FISH_SPECIES[99];
       } else {
-        const regularList = FISH_SPECIES.filter(f => !f.isSpecialLeader);
-        activeFish = regularList[Math.floor(Math.random() * regularList.length)];
+        // Random pick from 1 to 99
+        const normalPool = FISH_SPECIES.slice(0, 99);
+        // Weighted towards lower numbers, higher numbers rarer
+        const indexRoll = Math.floor(Math.pow(Math.random(), 1.5) * normalPool.length);
+        activeFish = normalPool[indexRoll];
       }
 
       const qRoll = Math.random();
@@ -839,7 +920,7 @@
           warningElem.innerText = lang === 'zh' ? '⚠️ 警告！拉力過高，快鬆開按鈕！' : '⚠️ DANGER! RELEASE BUTTON!';
           warningElem.classList.remove('hidden');
         } else if (currentDistance > 33.0) {
-          warningElem.innerText = lang === 'zh' ? '⚠️ 警告！魚兒快游走了，快按住收線！' : '⚠️ WARNING! FISH IS SWIMMING AWAY!';
+          warningElem.innerText = lang === 'zh' ? '⚠️ 警告！魚快游走了，快按住收線！' : '⚠️ WARNING! FISH IS SWIMMING AWAY!';
           warningElem.classList.remove('hidden');
         } else {
           warningElem.classList.add('hidden');
@@ -856,17 +937,14 @@
     }
 
     function fishEscaped(reason) {
-      gameState = 'READY';
       document.getElementById('tensionGaugeContainer').classList.add('hidden');
       document.getElementById('tensionWarning').classList.add('hidden');
       isReeling = false;
 
       showToast(reason);
-      updateActionButtonText();
 
-      if (lines <= 0) {
-        setTimeout(triggerGameOver, 1000);
-      }
+      // IMPROVEMENT #2: Popup alert modal on fishing failure
+      showResultModal('fish_escape', 0, reason);
     }
 
     function fishCaughtSuccess() {
@@ -887,7 +965,7 @@
       saveLocalStorageData();
       updateActionButtonText();
 
-      showResultModal(true, earnedScore);
+      showResultModal('success', earnedScore);
     }
 
     function triggerGameOver() {
@@ -896,11 +974,22 @@
       highScores.sort((a, b) => b.score - a.score);
       highScores = highScores.slice(0, 5);
       
-      // Allow character re-selection on new game session after game over
-      isCharLocked = false;
+      saveLocalStorageData();
+      showResultModal('game_over', score);
+    }
+
+    // IMPROVEMENT #3: Watch Ad Handler for Revive
+    function watchAdToRevive() {
+      // User can inject custom Ad network/link logic here
+      console.log("Triggering Ad for revival...");
+
+      // Simulate ad completion and reward
+      lines += 5;
+      updateHUD();
       saveLocalStorageData();
 
-      showResultModal(false, score);
+      closeResultModal();
+      showToast(I18N[lang].reviveSuccess);
     }
 
     function gameLoop() {
@@ -916,7 +1005,6 @@
       const w = canvas.width;
       const h = canvas.height;
 
-      // 1. Sky Gradient
       const skyGradient = ctx.createLinearGradient(0, 0, 0, h * 0.55);
       if (timeOfDay === 'DAY') {
         skyGradient.addColorStop(0, '#A2E8DD');
@@ -928,7 +1016,6 @@
       ctx.fillStyle = skyGradient;
       ctx.fillRect(0, 0, w, h);
 
-      // Sun / Moon
       ctx.beginPath();
       ctx.arc(w * 0.85, h * 0.18, 26, 0, Math.PI * 2);
       ctx.fillStyle = timeOfDay === 'DAY' ? '#FFD43B' : '#F1C40F';
@@ -937,7 +1024,6 @@
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // 2. Kawaii Ocean Surface & Waves
       const seaGradient = ctx.createLinearGradient(0, h * 0.55, 0, h);
       seaGradient.addColorStop(0, '#4EAEFF');
       seaGradient.addColorStop(0.4, '#1C7ED6');
@@ -945,7 +1031,6 @@
       ctx.fillStyle = seaGradient;
       ctx.fillRect(0, h * 0.55, w, h * 0.45);
 
-      // Waves Animation
       ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
       ctx.beginPath();
       const waveOffset = Date.now() * 0.003;
@@ -959,16 +1044,9 @@
       ctx.closePath();
       ctx.fill();
 
-      // 3. Render Pier & Chibi Character
       drawDockAndCharacter(w, h);
-
-      // 4. Render Weather Particles
       drawWeatherParticles();
-
-      // 5. Render Fishing Line, Bobber & WATER FISH STRUGGLE
       drawFishingLineAndStruggle(w, h);
-
-      // 6. Water Splash Droplets
       drawWaterSplashes();
     }
 
@@ -976,7 +1054,6 @@
       const dockWidth = w * 0.32;
       const dockY = h * 0.58;
 
-      // Pier Wood Structure
       ctx.fillStyle = '#8B5A2B';
       ctx.fillRect(0, dockY, dockWidth, h - dockY);
       ctx.fillStyle = '#A67C52';
@@ -986,7 +1063,6 @@
       ctx.fillRect(dockWidth * 0.3, dockY, 14, h - dockY);
       ctx.fillRect(dockWidth * 0.7, dockY, 14, h - dockY);
 
-      // Chibi Character
       const charX = dockWidth * 0.55;
       const charY = dockY - 10;
       
@@ -997,33 +1073,28 @@
         ctx.translate(0, Math.sin(Date.now() * 0.01) * 3);
       }
 
-      // Draw Fisherman Body / Outfit Clothes
       ctx.fillStyle = equippedOutfit.color;
       ctx.beginPath();
       ctx.roundRect(-12, -10, 24, 16, 6);
       ctx.fill();
 
-      // Draw Character Head
       ctx.fillStyle = selectedChar.color;
       ctx.beginPath();
       ctx.arc(0, -22, 20, 0, Math.PI * 2);
       ctx.fill();
 
-      // Face
       ctx.fillStyle = '#333';
       ctx.beginPath();
       ctx.arc(-6, -24, 2.5, 0, Math.PI * 2);
       ctx.arc(6, -24, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
-      // Blush
       ctx.fillStyle = '#FF8787';
       ctx.beginPath();
       ctx.arc(-10, -19, 3, 0, Math.PI * 2);
       ctx.arc(10, -19, 3, 0, Math.PI * 2);
       ctx.fill();
 
-      // Ears
       if (selectedChar.id === 'pascal') {
         ctx.fillStyle = selectedChar.color;
         ctx.beginPath();
@@ -1038,10 +1109,8 @@
         ctx.fill();
       }
 
-      // Draw Custom Hat
       drawCharacterHat(ctx, equippedHat);
 
-      // Rod
       ctx.strokeStyle = equippedRod.color;
       ctx.lineWidth = 4;
       ctx.beginPath();
@@ -1061,7 +1130,6 @@
       ctx.lineWidth = 1.5;
 
       if (hat.type === 'straw') {
-        // Wide Straw Sunhat
         ctx.beginPath();
         ctx.ellipse(0, -36, 26, 6, 0, 0, Math.PI * 2);
         ctx.fill();
@@ -1072,7 +1140,6 @@
         ctx.fill();
         ctx.stroke();
       } else if (hat.type === 'bucket') {
-        // Fisherman Bucket Hat
         ctx.beginPath();
         ctx.ellipse(0, -35, 22, 5, 0, 0, Math.PI * 2);
         ctx.fill();
@@ -1083,19 +1150,16 @@
         ctx.fill();
         ctx.stroke();
       } else if (hat.type === 'cap') {
-        // Baseball Cap
         ctx.beginPath();
         ctx.arc(0, -36, 17, Math.PI * 0.9, Math.PI * 2.1);
         ctx.fill();
         ctx.stroke();
 
-        // Visor
         ctx.beginPath();
         ctx.ellipse(12, -34, 12, 4, 0.2, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
       } else if (hat.type === 'crown') {
-        // Golden Crown
         ctx.fillStyle = hat.color;
         ctx.beginPath();
         ctx.moveTo(-15, -36);
@@ -1109,7 +1173,6 @@
         ctx.fill();
         ctx.stroke();
 
-        // Crown Jewels
         ctx.fillStyle = '#EF4444';
         ctx.beginPath();
         ctx.arc(0, -42, 2.5, 0, Math.PI * 2);
@@ -1324,7 +1387,6 @@
     function switchShopTab(tab) {
       activeShopTab = tab;
 
-      // Update button styling
       const btnRods = document.getElementById('tabBtnRods');
       const btnOutfits = document.getElementById('tabBtnOutfits');
       const btnHats = document.getElementById('tabBtnHats');
@@ -1437,7 +1499,7 @@
         updateHUD();
         renderShopItems();
         saveLocalStorageData();
-        showToast(lang === 'zh' ? '🎉 成功購買並裝備釣竿！' : '🎉 Purchased Rod!');
+        showToast(lang === 'zh' ? '🎉 成功購買並裝備魚竿！' : '🎉 Purchased Rod!');
       } else {
         showToast(lang === 'zh' ? '⚠️ 得分 (PT) 不足！' : '⚠️ Not enough PT!');
       }
@@ -1448,7 +1510,7 @@
       updateHUD();
       renderShopItems();
       saveLocalStorageData();
-      showToast(lang === 'zh' ? '✨ 已裝備釣竿！' : '✨ Equipped Rod!');
+      showToast(lang === 'zh' ? '✨ 已裝備魚竿！' : '✨ Equipped Rod!');
     }
 
     function buyOutfit(id, price) {
@@ -1505,6 +1567,58 @@
       }
     }
 
+    // --- BOOK SPREAD FISH LOG LOGIC ---
+    function changeBookPage(direction) {
+      const maxPages = Math.ceil(FISH_SPECIES.length / (itemsPerPage * 2));
+      currentBookPage += direction;
+      if (currentBookPage < 1) currentBookPage = 1;
+      if (currentBookPage > maxPages) currentBookPage = maxPages;
+      renderFishLogBook();
+    }
+
+    function renderFishLogBook() {
+      const leftContainer = document.getElementById('bookLeftPage');
+      const rightContainer = document.getElementById('bookRightPage');
+      const indicator = document.getElementById('bookPageIndicator');
+      
+      const maxPages = Math.ceil(FISH_SPECIES.length / (itemsPerPage * 2));
+      if (indicator) {
+        indicator.innerText = `${lang === 'zh' ? '第' : 'Page'} ${currentBookPage} / ${maxPages} ${lang === 'zh' ? '頁' : ''}`;
+      }
+
+      const startIndex = (currentBookPage - 1) * (itemsPerPage * 2);
+      const leftPageFish = FISH_SPECIES.slice(startIndex, startIndex + itemsPerPage);
+      const rightPageFish = FISH_SPECIES.slice(startIndex + itemsPerPage, startIndex + (itemsPerPage * 2));
+
+      if (leftContainer) {
+        leftContainer.innerHTML = leftPageFish.map(fish => createBookFishItemHTML(fish)).join('');
+      }
+      if (rightContainer) {
+        rightContainer.innerHTML = rightPageFish.map(fish => createBookFishItemHTML(fish)).join('');
+      }
+    }
+
+    function createBookFishItemHTML(fish) {
+      const count = fishLog[fish.id] || 0;
+      const isDiscovered = count > 0;
+      return `
+        <div class="flex items-center justify-between p-2 rounded-xl ${isDiscovered ? 'bg-white/90 border-amber-400 shadow-xs' : 'bg-gray-200/50 border-gray-300'} border-2 my-1">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">${isDiscovered ? fish.icon : '❓'}</span>
+            <div>
+              <div class="font-black text-amber-950 text-xs">${isDiscovered ? fish.name[lang] : (lang === 'zh' ? '??? 未解鎖未知魚類' : '??? Locked')}</div>
+              <div class="text-[9px] text-amber-800 font-bold">${lang === 'zh' ? '基礎分' : 'Base'}: ${fish.baseScore} PT</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] font-black ${isDiscovered ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md' : 'text-gray-500'}">
+              ${I18N[lang].catches}: ${count}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
     function renderLeaderboard() {
       const container = document.getElementById('leaderboardList');
       container.innerHTML = highScores.map((hs, index) => `
@@ -1520,37 +1634,19 @@
       `).join('');
     }
 
-    function renderFishLog() {
-      const container = document.getElementById('fishLogList');
-      container.innerHTML = FISH_SPECIES.map(fish => {
-        const count = fishLog[fish.id] || 0;
-        return `
-          <div class="flex items-center justify-between p-2.5 rounded-2xl ${count > 0 ? 'bg-amber-100/90 border-amber-400' : 'bg-gray-200/60 border-gray-300'} border-2">
-            <div class="flex items-center gap-2.5">
-              <span class="text-3xl">${fish.icon}</span>
-              <div>
-                <div class="font-black text-amber-950 text-xs sm:text-sm">${fish.name[lang]}</div>
-                <div class="text-[10px] text-amber-800 font-bold">${lang === 'zh' ? '基礎分數' : 'Base PT'}: ${fish.baseScore} PT</div>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-xs font-black ${count > 0 ? 'text-emerald-700' : 'text-gray-500'}">
-                ${I18N[lang].catches}: ${count}
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function showResultModal(isCatch, points) {
+    function showResultModal(type, points, customMsg = '') {
       const modal = document.getElementById('resultModal');
       const title = document.getElementById('resultTitle');
       const desc = document.getElementById('resultDesc');
       const icon = document.getElementById('resultIcon');
       const badge = document.getElementById('resultFishBadge');
+      const confirmLabel = document.getElementById('btnResultConfirmLabel');
+      const adBtn = document.getElementById('btnWatchAdRevive');
 
-      if (isCatch) {
+      confirmLabel.innerText = I18N[lang].gotIt;
+      adBtn.classList.add('hidden');
+
+      if (type === 'success') {
         icon.innerText = activeFish.icon;
         title.innerText = `${activeFish.name[lang]}!`;
         desc.innerText = `+${points} PT！`;
@@ -1558,11 +1654,25 @@
         document.getElementById('resultFishName').innerText = activeFish.name[lang];
         document.getElementById('resultFishQuality').innerText = `${lang === 'zh' ? '品質' : 'Quality'}: ${lang === 'zh' ? activeQuality.nameZh : activeQuality.nameEn}`;
         document.getElementById('resultFishQuality').style.color = activeQuality.color;
-      } else {
+      } else if (type === 'cast_fail') {
+        icon.innerText = "🎯";
+        title.innerText = lang === 'zh' ? '未命中目標' : 'Cast Missed';
+        desc.innerText = customMsg || I18N[lang].failedCast;
+        badge.classList.add('hidden');
+      } else if (type === 'fish_escape') {
+        icon.innerText = "💨";
+        title.innerText = lang === 'zh' ? '釣魚失敗' : 'Fish Escaped';
+        desc.innerText = customMsg;
+        badge.classList.add('hidden');
+      } else if (type === 'game_over') {
         icon.innerText = "🥀";
         title.innerText = I18N[lang].gameOver;
         desc.innerText = `${I18N[lang].gameOverDesc} ${points} PT`;
         badge.classList.add('hidden');
+        
+        // IMPROVEMENT #3: Show Ad Watch Revive button on Game Over
+        adBtn.classList.remove('hidden');
+        document.getElementById('lblWatchAdText').innerText = I18N[lang].watchAd;
       }
 
       modal.classList.remove('hidden');
@@ -1570,6 +1680,7 @@
 
     function closeResultModal() {
       document.getElementById('resultModal').classList.add('hidden');
+
       if (gameState === 'GAME_OVER') {
         score = 0;
         lines = 10;
@@ -1577,10 +1688,14 @@
         updateHUD();
         updateActionButtonText();
         
-        // Show character selection modal on game over reset
         if (!isCharLocked) {
           document.getElementById('charSelectModal').classList.remove('hidden');
         }
+      } else if (lines <= 0) {
+        triggerGameOver();
+      } else {
+        gameState = 'READY';
+        updateActionButtonText();
       }
     }
 
@@ -1590,7 +1705,7 @@
         modal.classList.toggle('hidden');
         if (!modal.classList.contains('hidden')) {
           renderLeaderboard();
-          renderFishLog();
+          renderFishLogBook();
           renderShopItems();
         }
       }
